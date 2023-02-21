@@ -3,7 +3,7 @@ enum AlgoSelection {
     SEARCHING_ALGORITHMS
 }
 
-let currentAlgos: AlgoSelection;
+let currentAlgos: AlgoType;
 
 window.addEventListener('load', () => {
     injectScripts();
