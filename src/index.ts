@@ -9,6 +9,14 @@ window.addEventListener('load', () => {
     injectScripts();
 })
 
-function injectScripts():void {
-    
+function injectScripts(): void {
+    Array.from(document.querySelectorAll("input[name=\"algoType\"]")).forEach((el) => {
+        el.addEventListener("change", () => {
+            switchAvailabeAlgos();
+        })
+    })
+}
+
+function switchAvailabeAlgos(): void {
+    }
 }
