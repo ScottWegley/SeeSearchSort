@@ -1,0 +1,10 @@
+body {
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+
+#dataSize {
+    width: auto;
+    max-width: 60px;
+}
