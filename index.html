@@ -23,18 +23,22 @@
         </form>
         <div id="centerLeft">
             <form id="algorithmSettings">
-                <input type="radio" id="search" name="algoType" value="Search">
-                <label for="search">Search</label><br>
-                <input type="radio" id="sort" name="algoType" value="Sort" checked>
-                <label for="sort">Sort</label><br>
+                <input type="radio" id="sortRadio" name="algoType" value="Sort" checked>
+                <label for="sortRadio">Sort</label><br>
+                <input type="radio" id="searchRadio" name="algoType" value="Search">
+                <label for="searchRadio">Search</label><br>
             </form>
             <form id="pickAlgo">
-                <input type="radio" id="insertion" name="inAlgo" value="insertion">
-                <label for="insertion">Insertion</label><br>
-                <input type="radio" id="bubble" name="inAlgo" value="bubble">
-                <label for="bubble">Bubble</label><br>
-                <input type="radio" id="cocktail" name="inAlgo" value="cocktail">
-                <label for="cocktail">Cocktail</label><br>
+                <input type="radio" id="insertion" name="inAlgo" value="insertion" class="sortingAlgo">
+                <label for="insertion" class="sortingAlgo">Insertion</label><br>
+                <input type="radio" id="bubble" name="inAlgo" value="bubble" class="sortingAlgo">
+                <label for="bubble" class="sortingAlgo">Bubble</label><br>
+                <input type="radio" id="cocktail" name="inAlgo" value="cocktail" class="sortingAlgo">
+                <label for="cocktail" class="sortingAlgo">Cocktail</label><br>
+                <input type="radio" id="binary" name="inAlgo" value="binary" class="searchingAlgo" disabled>
+                <label for="binary" class="searchingAlgo" disabled>Binary</label><br>
+                <input type="radio" id="fibonacci" name="inAlgo" value="fibonacci" class="searchingAlgo" disabled>
+                <label for="fibonacci" class="searchingAlgo" disabled>Fibonacci</label><br>
             </form>
         </div>
     </div>
