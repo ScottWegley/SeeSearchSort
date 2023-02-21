@@ -14,3 +14,11 @@ div#centerLeft {
     text-align: left;
 }
 
+form#algorithmSettings {
+    float: left;
+}
+
+form#pickAlgo {
+    float: left;
+    clear: right;
+}
