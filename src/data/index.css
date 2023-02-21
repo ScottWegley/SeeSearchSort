@@ -8,3 +8,9 @@ body {
     width: auto;
     max-width: 60px;
 }
+
+div#centerLeft {
+    display: inline-block;
+    text-align: left;
+}
+
