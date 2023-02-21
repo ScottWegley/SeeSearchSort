@@ -1,4 +1,4 @@
-enum AlgoSelection {
+enum AlgoType {
     SORTING_ALGORITHMS,
     SEARCHING_ALGORITHMS
 }
@@ -20,5 +20,26 @@ function injectScripts(): void {
 }
 
 function switchAvailabeAlgos(): void {
+    switch (currentAlgos) {
+        case AlgoType.SORTING_ALGORITHMS:
+            Array.from(document.getElementsByClassName("sortingAlgo")).forEach((el) => {
+                el.setAttribute("disabled", "true");
+                (el as HTMLInputElement).checked = false;
+            });
+            Array.from(document.getElementsByClassName("searchingAlgo")).forEach((el) => {
+                el.removeAttribute("disabled");
+            });
+            currentAlgos = AlgoType.SEARCHING_ALGORITHMS;
+            break;
+        default:
+            Array.from(document.getElementsByClassName("sortingAlgo")).forEach((el) => {
+                el.removeAttribute("disabled");
+            });
+            Array.from(document.getElementsByClassName("searchingAlgo")).forEach((el) => {
+                el.setAttribute("disabled", "true");
+                (el as HTMLInputElement).checked = false;
+            });
+            currentAlgos = AlgoType.SORTING_ALGORITHMS;
+            break;
     }
 }
