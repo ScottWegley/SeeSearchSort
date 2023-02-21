@@ -6,6 +6,8 @@ enum AlgoSelection {
 let currentAlgos: AlgoType;
 
 window.addEventListener('load', () => {
+    currentAlgos = !(document.getElementById("sortRadio") as HTMLInputElement).checked ? AlgoType.SORTING_ALGORITHMS : AlgoType.SEARCHING_ALGORITHMS;
+    switchAvailabeAlgos();
     injectScripts();
 })
 
