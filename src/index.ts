@@ -22,6 +22,8 @@ function injectScripts(): void {
     });
 }
 
+function validateDataSize():boolean {
+    return parseFloat((document.getElementById("dataSize") as HTMLInputElement).value) > 0;
 }
 
 function switchAvailabeAlgos(): void {
