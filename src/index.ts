@@ -24,6 +24,9 @@ function injectScripts(): void {
 }
 
 function validateDataSize():boolean {
+    return (document.getElementById("dataSize") as HTMLInputElement).valueAsNumber > 0;
+}
+
 function redefineData(newSize: number):void {
     dataSet = new Array<Number>(newSize > 0 ? newSize : 0);
 }
