@@ -4,6 +4,7 @@ enum AlgoType {
 }
 
 let currentAlgos: AlgoType;
+let dataSet: Array<Number> = new Array<Number>(0);
 
 window.addEventListener('load', () => {
     currentAlgos = !(document.getElementById("sortRadio") as HTMLInputElement).checked ? AlgoType.SORTING_ALGORITHMS : AlgoType.SEARCHING_ALGORITHMS;
@@ -23,7 +24,8 @@ function injectScripts(): void {
 }
 
 function validateDataSize():boolean {
-    return parseFloat((document.getElementById("dataSize") as HTMLInputElement).value) > 0;
+function redefineData(newSize: number):void {
+    dataSet = new Array<Number>(newSize > 0 ? newSize : 0);
 }
 
 function switchAvailabeAlgos(): void {
