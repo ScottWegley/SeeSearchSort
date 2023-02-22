@@ -15,8 +15,13 @@ function injectScripts(): void {
     Array.from(document.querySelectorAll("input[name=\"algoType\"]")).forEach((el) => {
         el.addEventListener("change", () => {
             switchAvailabeAlgos();
-        })
-    })
+        });
+    });
+    (document.getElementById("dataSettings") as HTMLFormElement).addEventListener("submit", (ev: SubmitEvent) => {
+        ev.preventDefault();
+    });
+}
+
 }
 
 function switchAvailabeAlgos(): void {
