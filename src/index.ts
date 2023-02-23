@@ -78,6 +78,7 @@ function injectScripts(): void {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
     });
+    //Switch the data mode when the data mode buttons are clicked.
     (document.getElementById("ascndBtn") as HTMLButtonElement).addEventListener("click", () => {
         updateDataMode(DataMode.ASCENDING);
     });
@@ -89,6 +90,11 @@ function injectScripts(): void {
     });
 }
 
+/**
+ * Handles updating the {@link dataMode} of the site.
+ * @param inMode The {@link DataMode} desired.  Always runs if it's equal to {@link DataMode.RANDOM}.
+ * Will not run if the desired {@link DataMode} is already active.
+ */
 function updateDataMode(inMode: DataMode): void {
     if (inMode != DataMode.RANDOM && inMode == dataMode) {
         return;
