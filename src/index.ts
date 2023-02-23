@@ -79,7 +79,7 @@ function injectScripts(): void {
     //Redraw the data when the window horizontal size has changed.
     window.addEventListener("resize", () => {
         if (prevWidth != window.innerWidth) {
-            redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
+            redefineData(forceMaxSize ? getMaxDataSize().valueOf() : (document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
             drawData();
             prevWidth = window.innerWidth;
         }
