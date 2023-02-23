@@ -43,6 +43,7 @@ let dataSet: Array<Number> = new Array<Number>(0);
 let dataMode: DataMode = DataMode.ASCENDING;
 /** Stores the previous width of the window. */
 let prevWidth: Number;
+let forceMaxSize: Boolean = true;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons
