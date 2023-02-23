@@ -42,18 +42,25 @@ let currentAlgos = AlgoType.SORTING_ALGORITHMS;
 let dataSet = new Array(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
 let dataMode = DataMode.ASCENDING;
+/** Stores the previous width of the window. */
+let prevWidth;
+/** Store whether or not we are forcing the data set to be of max size. */
+let forceMaxSize = true;
 /**
- * Our "main" function.  Controls the intitial state of the algorithm type radio buttons
+ * Our "main" function.  Controls the intitial state of the algorithm type radio buttons and max size check box.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
  * Wipes the data set by setting the size to 0. {@link redefineData()}
  * Add all event listeners to HTML elements. {@link injectScripts()}
+ * Update the state of forcedMaxSize to wipe the data set and change it to the max size. {@link updateForcedMaxSize()}
  */
 window.addEventListener('load', () => {
     document.getElementById("searchRadio").checked = false;
     document.getElementById("sortRadio").checked = true;
+    document.getElementById("maxSize").checked = true;
+    prevWidth = window.innerWidth;
     switchAvailabeAlgos();
-    redefineData(0);
     injectScripts();
+    updateForcedMaxSize(forceMaxSize.valueOf());
 });
 /**Adds event listeners to the HTML Elements on the page. */
 function injectScripts() {
@@ -72,10 +79,13 @@ function injectScripts() {
         redefineData(document.getElementById("dataSize").valueAsNumber);
         drawData();
     });
-    //Redraw the data when the window size has changed.
+    //Redraw the data when the window horizontal size has changed.
     window.addEventListener("resize", () => {
-        redefineData(document.getElementById("dataSize").valueAsNumber);
-        drawData();
+        if (prevWidth != window.innerWidth) {
+            redefineData(forceMaxSize ? getMaxDataSize().valueOf() : document.getElementById("dataSize").valueAsNumber);
+            drawData();
+            prevWidth = window.innerWidth;
+        }
     });
     //Switch the data mode when the data mode buttons are clicked.
     document.getElementById("ascndBtn").addEventListener("click", () => {
@@ -86,6 +96,10 @@ function injectScripts() {
     });
     document.getElementById("rndmBtn").addEventListener("click", () => {
         updateDataMode(DataMode.RANDOM);
+    });
+    //Checkbox to force the data set to be the max size always.
+    document.getElementById("maxSize").addEventListener("change", () => {
+        updateForcedMaxSize(document.getElementById("maxSize").checked);
     });
 }
 /**
@@ -99,6 +113,23 @@ function updateDataMode(inMode) {
     }
     dataMode = inMode;
     drawData();
+}
+/**
+ * Update the internal switch for forcing max size.
+ * @param inState Desire switch value.
+ */
+function updateForcedMaxSize(inState) {
+    forceMaxSize = inState;
+    if (forceMaxSize) {
+        document.getElementById("dataSize").setAttribute("disabled", "true");
+        document.getElementById("sizeLbl").setAttribute("disabled", "true");
+        redefineData(getMaxDataSize().valueOf());
+        drawData();
+    }
+    else {
+        document.getElementById("dataSize").removeAttribute("disabled");
+        document.getElementById("sizeLbl").removeAttribute("disabled");
+    }
 }
 /**
  * Changes the size of the data and clamps it if necessary.  Set the displayed size to the clamped size.
