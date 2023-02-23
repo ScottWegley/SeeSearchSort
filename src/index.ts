@@ -23,7 +23,7 @@ function injectScripts(): void {
     (document.getElementById("dataSettings") as HTMLFormElement).addEventListener("submit", (ev: SubmitEvent) => {
         ev.preventDefault();
     });
-    (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", (ev) => {
+    (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
     })
 }
