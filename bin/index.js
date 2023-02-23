@@ -77,12 +77,27 @@ function injectScripts() {
         redefineData(document.getElementById("dataSize").valueAsNumber);
         drawData();
     });
+    //Switch the data mode when the data mode buttons are clicked.
+    document.getElementById("ascndBtn").addEventListener("click", () => {
+        updateDataMode(DataMode.ASCENDING);
+    });
+    document.getElementById("dscndBtn").addEventListener("click", () => {
+        updateDataMode(DataMode.DESCENDING);
+    });
+    document.getElementById("rndmBtn").addEventListener("click", () => {
+        updateDataMode(DataMode.RANDOM);
+    });
 }
+/**
+ * Handles updating the {@link dataMode} of the site.
+ * @param inMode The {@link DataMode} desired.  Always runs if it's equal to {@link DataMode.RANDOM}.
+ * Will not run if the desired {@link DataMode} is already active.
+ */
 function updateDataMode(inMode) {
     if (inMode != DataMode.RANDOM && inMode == dataMode) {
         return;
     }
-    dataMode == inMode;
+    dataMode = inMode;
     drawData();
 }
 /**
