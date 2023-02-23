@@ -58,6 +58,21 @@ function drawData(): void {
             canvas.appendChild(toAdd);
         }
     }
+    if (dataMode == DataMode.RANDOM) {
+        let i = dataSet.length;
+        while (--i >= 0) {
+            let temp = Math.floor(Math.random() * (i + 1));
+            [dataSet[temp], dataSet[i]] = [dataSet[i], dataSet[temp]];
+        }
+        for (let index = 0; index < dataSet.length; index++) {
+            var toAdd = document.createElement("div");
+            toAdd.style.height = (dataSet[index].valueOf() * 3).toString() + "px";
+            toAdd.style.width = barWidthPx.toString() + "px";
+            toAdd.style.backgroundColor = "gray";
+            toAdd.style.display = "inline-block";
+            canvas.appendChild(toAdd);
+        }
+    }
 }
 
 function switchAvailabeAlgos(): void {
