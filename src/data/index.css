@@ -9,6 +9,11 @@ body {
     max-width: 60px;
 }
 
+div#dataDisplay {
+    margin: auto;
+    text-align: center;
+}
+
 div#centerLeft {
     display: inline-block;
     text-align: left;
