@@ -78,6 +78,15 @@ function injectScripts(): void {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
     });
+    (document.getElementById("ascndBtn") as HTMLButtonElement).addEventListener("click", () => {
+        updateDataMode(DataMode.ASCENDING);
+    });
+    (document.getElementById("dscndBtn") as HTMLButtonElement).addEventListener("click", () => {
+        updateDataMode(DataMode.DESCENDING);
+    });
+    (document.getElementById("rndmBtn") as HTMLButtonElement).addEventListener("click", () => {
+        updateDataMode(DataMode.RANDOM);
+    });
 }
 
 function updateDataMode(inMode: DataMode): void {
