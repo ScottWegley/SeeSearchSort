@@ -98,3 +98,6 @@ function switchAvailabeAlgos(): void {
             break;
     }
 }
+function getMaxDataSize(): Number {
+    return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
+}
