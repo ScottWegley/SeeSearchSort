@@ -54,10 +54,11 @@ let forceMaxSize: Boolean = true;
 window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
+    (document.getElementById("maxSize") as HTMLInputElement).checked = true;
     prevWidth = window.innerWidth;
     switchAvailabeAlgos();
-    redefineData(0);
     injectScripts();
+    updateForcedMaxSize(forceMaxSize.valueOf());
 });
 
 /**Adds event listeners to the HTML Elements on the page. */
