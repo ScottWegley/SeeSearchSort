@@ -80,11 +80,11 @@ function injectScripts(): void {
     });
 }
 
-function updateDataMode(inMode:DataMode){
-    if(inMode != DataMode.RANDOM && inMode == dataMode){
+function updateDataMode(inMode: DataMode): void {
+    if (inMode != DataMode.RANDOM && inMode == dataMode) {
         return;
     }
-    dataMode == inMode;
+    dataMode = inMode;
     drawData();
 }
 
