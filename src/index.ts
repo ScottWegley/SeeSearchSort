@@ -47,7 +47,7 @@ let prevWidth: Number;
 let forceMaxSize: Boolean = true;
 
 /**
- * Our "main" function.  Controls the intitial state of the algorithm type radio buttons and max size check box.
+ * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
  * Wipes the data set by setting the size to 0. {@link redefineData()}
  * Add all event listeners to HTML elements. {@link injectScripts()}
@@ -57,6 +57,7 @@ window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
     (document.getElementById("maxSize") as HTMLInputElement).checked = true;
+    (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber = 1;
     prevWidth = window.innerWidth;
     switchAvailabeAlgos();
     injectScripts();
@@ -150,7 +151,6 @@ function redefineData(newSize: number): void {
  * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
  */
 function drawData(): void {
-    console.log("Lmao drawinnnnnnnng");
     let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
     canvas.innerHTML = "";
     for (let index = 0; index < dataSet.length; index++) {
