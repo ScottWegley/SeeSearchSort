@@ -31,8 +31,13 @@ function injectScripts(): void {
     });
 }
 
-function validateDataSize():boolean {
-    return (document.getElementById("dataSize") as HTMLInputElement).valueAsNumber > 0;
+function updateDataMode(inMode:DataMode){
+    if(inMode != DataMode.RANDOM && inMode == dataMode){
+        return;
+    }
+    dataMode == inMode;
+    drawData();
+}
 }
 
 function redefineData(newSize: number):void {
