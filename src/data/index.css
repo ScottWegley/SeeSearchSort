@@ -9,6 +9,11 @@ body {
     max-width: 43px;
 }
 
+#searchKey {
+    width: auto;
+    max-width: 43px;
+}
+
 div#dataDisplay {
     margin: auto;
     text-align: center;
@@ -26,4 +31,8 @@ form#algorithmSettings {
 form#pickAlgo {
     float: left;
     clear: right;
+}
+
+form#dataDetails {
+    float: left;
 }
