@@ -38,6 +38,9 @@ function updateDataMode(inMode:DataMode){
     dataMode == inMode;
     drawData();
 }
+function redefineData(newSize: number): void {
+    dataSet = new Array<Number>(newSize > 0 ? (newSize < getMaxDataSize() ? newSize : getMaxDataSize()) : 0);
+    (document.getElementById("dataSize") as HTMLInputElement).value = (newSize > 0 ? (newSize < getMaxDataSize() ? newSize : getMaxDataSize()) : 0).toString();
 }
 
 function redefineData(newSize: number):void {
