@@ -108,6 +108,9 @@ function injectScripts(): void {
     });
 }
 
+/**
+ * Adds bounds of the search key of 1 (inclusive) and {@link getMaxDataSize()} (inclusive).
+ */
 function validateSearchKey(): void {
     let value: Number = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
     (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber = (value >= 1 ? (value <= getMaxDataSize() ? value : getMaxDataSize()) : 1).valueOf();
