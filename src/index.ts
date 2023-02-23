@@ -43,13 +43,15 @@ let dataSet: Array<Number> = new Array<Number>(0);
 let dataMode: DataMode = DataMode.ASCENDING;
 /** Stores the previous width of the window. */
 let prevWidth: Number;
+/** Store whether or not we are forcing the data set to be of max size. */
 let forceMaxSize: Boolean = true;
 
 /**
- * Our "main" function.  Controls the intitial state of the algorithm type radio buttons
+ * Our "main" function.  Controls the intitial state of the algorithm type radio buttons and max size check box.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
  * Wipes the data set by setting the size to 0. {@link redefineData()}
  * Add all event listeners to HTML elements. {@link injectScripts()}
+ * Update the state of forcedMaxSize to wipe the data set and change it to the max size. {@link updateForcedMaxSize()}
  */
 window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
@@ -96,6 +98,7 @@ function injectScripts(): void {
     (document.getElementById("rndmBtn") as HTMLButtonElement).addEventListener("click", () => {
         updateDataMode(DataMode.RANDOM);
     });
+    //Checkbox to force the data set to be the max size always.
     (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", () => {
         updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
     });
@@ -114,6 +117,10 @@ function updateDataMode(inMode: DataMode): void {
     drawData();
 }
 
+/**
+ * Update the internal switch for forcing max size.
+ * @param inState Desire switch value.
+ */
 function updateForcedMaxSize(inState: boolean): void {
     forceMaxSize = inState;
     if (forceMaxSize) {
