@@ -41,6 +41,8 @@ let currentAlgos: AlgoType = AlgoType.SORTING_ALGORITHMS;
 let dataSet: Array<Number> = new Array<Number>(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
 let dataMode: DataMode = DataMode.ASCENDING;
+/** Stores the previous width of the window. */
+let prevWidth: Number;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons
@@ -51,6 +53,7 @@ let dataMode: DataMode = DataMode.ASCENDING;
 window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
+    prevWidth = window.innerWidth;
     switchAvailabeAlgos();
     redefineData(0);
     injectScripts();
@@ -73,10 +76,13 @@ function injectScripts(): void {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
     });
-    //Redraw the data when the window size has changed.
+    //Redraw the data when the window horizontal size has changed.
     window.addEventListener("resize", () => {
-        redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
-        drawData();
+        if (prevWidth != window.innerWidth) {
+            redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
+            drawData();
+            prevWidth = window.innerWidth;
+        }
     });
     //Switch the data mode when the data mode buttons are clicked.
     (document.getElementById("ascndBtn") as HTMLButtonElement).addEventListener("click", () => {
