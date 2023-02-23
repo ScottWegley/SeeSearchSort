@@ -76,8 +76,9 @@ function drawData(): void {
 }
 
 function switchAvailabeAlgos(): void {
+    currentAlgos = (document.getElementById("sortRadio") as HTMLInputElement).checked ? AlgoType.SORTING_ALGORITHMS : AlgoType.SEARCHING_ALGORITHMS;
     switch (currentAlgos) {
-        case AlgoType.SORTING_ALGORITHMS:
+        case AlgoType.SEARCHING_ALGORITHMS:
             Array.from(document.getElementsByClassName("sortingAlgo")).forEach((el) => {
                 el.setAttribute("disabled", "true");
                 (el as HTMLInputElement).checked = false;
@@ -85,7 +86,6 @@ function switchAvailabeAlgos(): void {
             Array.from(document.getElementsByClassName("searchingAlgo")).forEach((el) => {
                 el.removeAttribute("disabled");
             });
-            currentAlgos = AlgoType.SEARCHING_ALGORITHMS;
             break;
         default:
             Array.from(document.getElementsByClassName("sortingAlgo")).forEach((el) => {
@@ -95,7 +95,6 @@ function switchAvailabeAlgos(): void {
                 el.setAttribute("disabled", "true");
                 (el as HTMLInputElement).checked = false;
             });
-            currentAlgos = AlgoType.SORTING_ALGORITHMS;
             break;
     }
 }
