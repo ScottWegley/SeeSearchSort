@@ -43,8 +43,21 @@ function redefineData(newSize: number): void {
     (document.getElementById("dataSize") as HTMLInputElement).value = (newSize > 0 ? (newSize < getMaxDataSize() ? newSize : getMaxDataSize()) : 0).toString();
 }
 
-function redefineData(newSize: number):void {
-    dataSet = new Array<Number>(newSize > 0 ? newSize : 0);
+function drawData(): void {
+    console.log("Lmao drawinnnnnnnng");
+    let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
+    canvas.innerHTML = "";
+    for (let index = 0; index < dataSet.length; index++) {
+        dataSet[index] = (dataMode != DataMode.DESCENDING ? index + 1 : dataSet.length - index);
+        if (dataMode != DataMode.RANDOM) {
+            var toAdd = document.createElement("div");
+            toAdd.style.height = (dataSet[index].valueOf() * 3).toString() + "px";
+            toAdd.style.width = "9.5px";
+            toAdd.style.backgroundColor = "gray";
+            toAdd.style.display = "inline-block";
+            canvas.appendChild(toAdd);
+        }
+    }
 }
 
 function switchAvailabeAlgos(): void {
