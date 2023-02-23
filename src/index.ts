@@ -103,7 +103,11 @@ function injectScripts(): void {
     (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", () => {
         updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
     });
+    (document.getElementById("searchKey") as HTMLInputElement).addEventListener("change", () => {
+        validateSearchKey();
+    });
 }
+
 function validateSearchKey(): void {
     let value: Number = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
     (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber = (value >= 1 ? (value <= getMaxDataSize() ? value : getMaxDataSize()) : 1).valueOf();
