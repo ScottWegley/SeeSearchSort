@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
     switchAvailabeAlgos();
+    redefineData(0);
     injectScripts();
 });
 
