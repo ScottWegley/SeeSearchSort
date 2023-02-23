@@ -94,6 +94,9 @@ function injectScripts(): void {
     (document.getElementById("rndmBtn") as HTMLButtonElement).addEventListener("click", () => {
         updateDataMode(DataMode.RANDOM);
     });
+    (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", () => {
+        updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
+    });
 }
 
 /**
@@ -107,6 +110,20 @@ function updateDataMode(inMode: DataMode): void {
     }
     dataMode = inMode;
     drawData();
+}
+
+function updateForcedMaxSize(inState: boolean): void {
+    forceMaxSize = inState;
+    if (forceMaxSize) {
+        (document.getElementById("dataSize") as HTMLInputElement).setAttribute("disabled", "true");
+        (document.getElementById("sizeLbl") as HTMLLabelElement).setAttribute("disabled", "true");
+        redefineData(getMaxDataSize().valueOf());
+        drawData();
+    } else {
+        (document.getElementById("dataSize") as HTMLInputElement).removeAttribute("disabled");
+        (document.getElementById("sizeLbl") as HTMLLabelElement).removeAttribute("disabled");
+    }
+
 }
 
 /**
