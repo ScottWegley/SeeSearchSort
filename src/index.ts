@@ -25,6 +25,8 @@ function injectScripts(): void {
     });
     (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
+        drawData();
+    });
     window.addEventListener("resize", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
