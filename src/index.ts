@@ -104,6 +104,10 @@ function injectScripts(): void {
         updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
     });
 }
+function validateSearchKey(): void {
+    let value: Number = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
+    (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber = (value >= 1 ? (value <= getMaxDataSize() ? value : getMaxDataSize()) : 1).valueOf();
+}
 
 /**
  * Handles updating the {@link dataMode} of the site.
