@@ -7,7 +7,8 @@ let currentAlgos: AlgoType;
 let dataSet: Array<Number> = new Array<Number>(0);
 
 window.addEventListener('load', () => {
-    currentAlgos = !(document.getElementById("sortRadio") as HTMLInputElement).checked ? AlgoType.SORTING_ALGORITHMS : AlgoType.SEARCHING_ALGORITHMS;
+    (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
+    (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
     switchAvailabeAlgos();
     injectScripts();
 });
