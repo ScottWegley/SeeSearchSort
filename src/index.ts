@@ -3,8 +3,23 @@ enum AlgoType {
     SEARCHING_ALGORITHMS
 }
 
-let currentAlgos: AlgoType;
+enum SortAlgos {
+    INSERTION_SORT,
+    BUBBLE_SORT,
+    COCKTAIL_SORT
+}
+enum SearchAlgos {
+    BINARY_SEARCH,
+    FIBONACCI_SEARCH
+}
+enum DataMode {
+    ASCENDING,
+    DESCENDING,
+    RANDOM
+}
+let barWidthPx: Number = 9.5;
 let dataSet: Array<Number> = new Array<Number>(0);
+let dataMode: DataMode = DataMode.ASCENDING;
 
 window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
