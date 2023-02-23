@@ -1,26 +1,53 @@
+/**An Enum representative of the two different types of algorithms the site currently supports. */
 enum AlgoType {
+    /**Represents the Sorting Algorithm Selection */
     SORTING_ALGORITHMS,
+    /**Represents the Searching Algorithm Selection */
     SEARCHING_ALGORITHMS
 }
 
+/**An Enum Representative of our Sorting Algorithms. */
 enum SortAlgos {
+    /**Represents the Insertion Sort Algorithm. */
     INSERTION_SORT,
+    /**Represents the Bubble Sort Algorithm. */
     BUBBLE_SORT,
+    /**Represents the Cocktail Sort Algorithm. */
     COCKTAIL_SORT
 }
+
+/**An Enum Representative of our Searching Algorithms. */
 enum SearchAlgos {
+    /**Represents the Binary Search Algorithm. */
     BINARY_SEARCH,
+    /**Represents the Fibonacci Search Algorithm. */
     FIBONACCI_SEARCH
 }
+
+/** An Enum representative of the three different data orders. */
 enum DataMode {
+    /**Represents the data iterating from one to the size of the data set. */
     ASCENDING,
+    /**Represents the data iterating from the size of the data set to one. */
     DESCENDING,
+    /**Represents the data in random order, with each value from one to the data set size appearing exactly once. */
     RANDOM
 }
+
+/**The width of every bar.*/
 let barWidthPx: Number = 9.5;
+/** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
+let currentAlgos: AlgoType = AlgoType.SORTING_ALGORITHMS;
 let dataSet: Array<Number> = new Array<Number>(0);
+/** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
 let dataMode: DataMode = DataMode.ASCENDING;
 
+/**
+ * Our "main" function.  Controls the intitial state of the algorithm type radio buttons
+ * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
+ * Wipes the data set by setting the size to 0. {@link redefineData()}
+ * Add all event listeners to HTML elements. {@link injectScripts()}
+ */
 window.addEventListener('load', () => {
     (document.getElementById("searchRadio") as HTMLInputElement).checked = false;
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
@@ -29,19 +56,24 @@ window.addEventListener('load', () => {
     injectScripts();
 });
 
+/**Adds event listeners to the HTML Elements on the page. */
 function injectScripts(): void {
+    //Switches which radio buttons can be selected when the algorithm category is switched.
     Array.from(document.querySelectorAll("input[name=\"algoType\"]")).forEach((el) => {
         el.addEventListener("change", () => {
             switchAvailabeAlgos();
         });
     });
+    //Stop permature form submission.
     (document.getElementById("dataSettings") as HTMLFormElement).addEventListener("submit", (ev: SubmitEvent) => {
         ev.preventDefault();
     });
+    //Redraw the data when the size has changed.
     (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
     });
+    //Redraw the data when the window size has changed.
     window.addEventListener("resize", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawData();
@@ -55,11 +87,21 @@ function updateDataMode(inMode:DataMode){
     dataMode == inMode;
     drawData();
 }
+
+/**
+ * Changes the size of the data and clamps it if necessary.  Set the displayed size to the clamped size.
+ * @param newSize The desired new size for the data set.  Will be restricted to 0 (inclusize) and 
+ * {@link getMaxDataSize()} (exclusive).
+ */
 function redefineData(newSize: number): void {
     dataSet = new Array<Number>(newSize > 0 ? (newSize < getMaxDataSize() ? newSize : getMaxDataSize()) : 0);
     (document.getElementById("dataSize") as HTMLInputElement).value = (newSize > 0 ? (newSize < getMaxDataSize() ? newSize : getMaxDataSize()) : 0).toString();
 }
 
+/**
+ * Clears all of the current data bars from the display.  Loop through the array of data and assign values in Ascending or Descending order.
+ * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
+ */
 function drawData(): void {
     console.log("Lmao drawinnnnnnnng");
     let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
@@ -92,6 +134,10 @@ function drawData(): void {
     }
 }
 
+/**
+ * Adds and removed the disabled attribute from the algorithm radio buttons based on the currently selected algorithm type.
+ * @see {@link currentAlgos}
+ */
 function switchAvailabeAlgos(): void {
     currentAlgos = (document.getElementById("sortRadio") as HTMLInputElement).checked ? AlgoType.SORTING_ALGORITHMS : AlgoType.SEARCHING_ALGORITHMS;
     switch (currentAlgos) {
@@ -115,6 +161,10 @@ function switchAvailabeAlgos(): void {
             break;
     }
 }
+
+/**
+ * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down.
+ */
 function getMaxDataSize(): Number {
     return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
 }
