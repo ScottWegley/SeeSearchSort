@@ -239,6 +239,7 @@ function switchAvailabeAlgos(): void {
  * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down.
  */
 function getMaxDataSize(): Number {
+    return 5;
     return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
 }
 
@@ -267,6 +268,27 @@ function disableHoverMode(): void {
         (el as HTMLElement).style.backgroundColor = "gray";
     });
 }
+
+/** Function to execute insertion sort. */
+function insertionSort(): void {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
+    for (let index = 0; index < localDataSet.length; index++) {
+        let element = localDataSet[index]; //We're trying to find a home for this guy.
+        let location = index - 1; //We're going to start checking the guy before us.
+        while (location >= 0) { //Until we hit the bottom of the list
+            if (localDataSet[location] > element) {
+                localDataSet[location + 1] = localDataSet[location];
+                swapNodes(canvas[location + 1],canvas[location]);
+                location--;
+            }
+        }
+        localDataSet[location + 1] = element;
+    }
+    dataSet = localDataSet;
+    currentlySorted = true;
+}
+
 /**
  * A function to swap two nodes.
  * Sourced from: br4nnigan on StackOverflow
