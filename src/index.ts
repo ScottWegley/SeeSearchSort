@@ -47,6 +47,8 @@ let prevWidth: Number;
 let forceMaxSize: Boolean = true;
 /** Store whether or not hover effects are currently allowed. */
 let allowHover: Boolean = true;
+/** Stores whether or not the {@link dataSet} is currently sorted. */
+let currentlySorted: Boolean = false;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -125,10 +127,11 @@ function validateSearchKey(): void {
  * Will not run if the desired {@link DataMode} is already active.
  */
 function updateDataMode(inMode: DataMode): void {
-    if (inMode != DataMode.RANDOM && inMode == dataMode) {
+    if (inMode != DataMode.RANDOM && inMode == dataMode && !currentlySorted) {
         return;
     }
     dataMode = inMode;
+    currentlySorted = false;
     drawDefaultData();
 }
 
