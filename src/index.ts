@@ -162,6 +162,7 @@ function redefineData(newSize: number): void {
  * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
  */
 function drawData(): void {
+    (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: ";
     let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
     canvas.innerHTML = "";
     for (let index = 0; index < dataSet.length; index++) {
