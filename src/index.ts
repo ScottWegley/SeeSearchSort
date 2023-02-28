@@ -174,6 +174,12 @@ function drawData(): void {
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
             toAdd.addEventListener("mouseover", (e) => {
+                let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
+                if (prevDatem != -1) {
+                    Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+                        (el as HTMLElement).style.backgroundColor = "gray";
+                    });
+                };
                 (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
                 (e.target as HTMLElement).style.backgroundColor = "green";
                 (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + dataSet[index].valueOf().toString();
