@@ -45,6 +45,8 @@ let dataMode: DataMode = DataMode.ASCENDING;
 let prevWidth: Number;
 /** Store whether or not we are forcing the data set to be of max size. */
 let forceMaxSize: Boolean = true;
+/** Store whether or not hover effects are currently allowed. */
+let allowHover: Boolean = true;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -241,14 +243,24 @@ function getMaxDataSize(): Number {
  * Assigns my hovering event handler to the target of a MouseEvent
  * @param e The MouseEvent to to retrieve a target from.
  */
-function handleDatemHover(e:MouseEvent): void{
-    let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
-    if (prevDatem != -1) {
-        Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
-            (el as HTMLElement).style.backgroundColor = "gray";
-        });
-    };
-    (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
-    (e.target as HTMLElement).style.backgroundColor = "#00ff00";
-    (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + (e.target as HTMLElement).id.replace("displayDatem", "");
+function handleDatemHover(e: MouseEvent): void {
+    if (allowHover) {
+        let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
+        if (prevDatem != -1) {
+            Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+                (el as HTMLElement).style.backgroundColor = "gray";
+            });
+        };
+        (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
+        (e.target as HTMLElement).style.backgroundColor = "#00ff00";
+        (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + (e.target as HTMLElement).id.replace("displayDatem", "");
+    }
+}
+
+/** Disables the on hover effexts for datem divs via {@link allowHover}. Removes any active effects. */
+function disableHoverMode(): void {
+    allowHover = false;
+    Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+        (el as HTMLElement).style.backgroundColor = "gray";
+    });
 }
