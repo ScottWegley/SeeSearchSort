@@ -172,6 +172,7 @@ function drawData(): void {
             toAdd.style.width = "9.5px";
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
+            toAdd.id = "displayDatem" + dataSet[index];
             canvas.appendChild(toAdd);
         }
     }
