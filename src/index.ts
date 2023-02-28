@@ -201,6 +201,7 @@ function drawData(): void {
             toAdd.style.width = barWidthPx.toString() + "px";
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
+            toAdd.id = "displayDatem" + dataSet[index];
             toAdd.addEventListener("mouseover", (e) => {
                 let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
                 if (prevDatem != -1) {
