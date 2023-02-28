@@ -103,6 +103,7 @@ function injectScripts(): void {
     (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", () => {
         updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
     });
+    //Validation for a number input that stores a search key.
     (document.getElementById("searchKey") as HTMLInputElement).addEventListener("change", () => {
         validateSearchKey();
     });
