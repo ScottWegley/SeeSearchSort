@@ -173,6 +173,11 @@ function drawData(): void {
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.addEventListener("mouseover", (e) => {
+                (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
+                (e.target as HTMLElement).style.backgroundColor = "green";
+                (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + dataSet[index].valueOf().toString();
+            });
             canvas.appendChild(toAdd);
         }
     }
