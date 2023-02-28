@@ -47,7 +47,7 @@ let prevWidth;
 /** Store whether or not we are forcing the data set to be of max size. */
 let forceMaxSize = true;
 /**
- * Our "main" function.  Controls the intitial state of the algorithm type radio buttons and max size check box.
+ * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
  * Wipes the data set by setting the size to 0. {@link redefineData()}
  * Add all event listeners to HTML elements. {@link injectScripts()}
@@ -57,6 +57,7 @@ window.addEventListener('load', () => {
     document.getElementById("searchRadio").checked = false;
     document.getElementById("sortRadio").checked = true;
     document.getElementById("maxSize").checked = true;
+    document.getElementById("searchKey").valueAsNumber = 1;
     prevWidth = window.innerWidth;
     switchAvailabeAlgos();
     injectScripts();
@@ -101,6 +102,17 @@ function injectScripts() {
     document.getElementById("maxSize").addEventListener("change", () => {
         updateForcedMaxSize(document.getElementById("maxSize").checked);
     });
+    //Validation for a number input that stores a search key.
+    document.getElementById("searchKey").addEventListener("change", () => {
+        validateSearchKey();
+    });
+}
+/**
+ * Adds bounds of the search key of 1 (inclusive) and {@link getMaxDataSize()} (inclusive).
+ */
+function validateSearchKey() {
+    let value = document.getElementById("searchKey").valueAsNumber;
+    document.getElementById("searchKey").valueAsNumber = (value >= 1 ? (value <= getMaxDataSize() ? value : getMaxDataSize()) : 1).valueOf();
 }
 /**
  * Handles updating the {@link dataMode} of the site.
@@ -145,7 +157,7 @@ function redefineData(newSize) {
  * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
  */
 function drawData() {
-    console.log("Lmao drawinnnnnnnng");
+    document.getElementById("hoveredDatem").textContent = "Hovered Value: ";
     let canvas = document.getElementById("dataDisplay");
     canvas.innerHTML = "";
     for (let index = 0; index < dataSet.length; index++) {
@@ -156,6 +168,10 @@ function drawData() {
             toAdd.style.width = "9.5px";
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
+            toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.addEventListener("mouseover", (e) => {
+                handleDatemHover(e);
+            });
             canvas.appendChild(toAdd);
         }
     }
@@ -171,6 +187,10 @@ function drawData() {
             toAdd.style.width = barWidthPx.toString() + "px";
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
+            toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.addEventListener("mouseover", (e) => {
+                handleDatemHover(e);
+            });
             canvas.appendChild(toAdd);
         }
     }
@@ -207,4 +227,21 @@ function switchAvailabeAlgos() {
  */
 function getMaxDataSize() {
     return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
+}
+/**
+ * Assigns my hovering event handler to the target of a MouseEvent
+ * @param e The MouseEvent to to retrieve a target from.
+ */
+function handleDatemHover(e) {
+    var _a;
+    let prevDatem = parseInt((((_a = document.getElementById("hoveredDatem").textContent) === null || _a === void 0 ? void 0 : _a.substring(15)) || "-1"));
+    if (prevDatem != -1) {
+        Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+            el.style.backgroundColor = "gray";
+        });
+    }
+    ;
+    e.target.classList.add("currentlyHoveredDatem");
+    e.target.style.backgroundColor = "#00ff00";
+    document.getElementById("hoveredDatem").textContent = "Hovered Value: " + e.target.id.replace("displayDatem", "");
 }
