@@ -81,13 +81,13 @@ function injectScripts(): void {
     //Redraw the data when the size has changed.
     (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", () => {
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
-        drawData();
+        drawDefaultData();
     });
     //Redraw the data when the window horizontal size has changed.
     window.addEventListener("resize", () => {
         if (prevWidth != window.innerWidth) {
             redefineData(forceMaxSize ? getMaxDataSize().valueOf() : (document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
-            drawData();
+            drawDefaultData();
             prevWidth = window.innerWidth;
         }
     });
@@ -129,7 +129,7 @@ function updateDataMode(inMode: DataMode): void {
         return;
     }
     dataMode = inMode;
-    drawData();
+    drawDefaultData();
 }
 
 /**
@@ -142,7 +142,7 @@ function updateForcedMaxSize(inState: boolean): void {
         (document.getElementById("dataSize") as HTMLInputElement).setAttribute("disabled", "true");
         (document.getElementById("sizeLbl") as HTMLLabelElement).setAttribute("disabled", "true");
         redefineData(getMaxDataSize().valueOf());
-        drawData();
+        drawDefaultData();
     } else {
         (document.getElementById("dataSize") as HTMLInputElement).removeAttribute("disabled");
         (document.getElementById("sizeLbl") as HTMLLabelElement).removeAttribute("disabled");
@@ -164,7 +164,7 @@ function redefineData(newSize: number): void {
  * Clears all of the current data bars from the display.  Loop through the array of data and assign values in Ascending or Descending order.
  * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
  */
-function drawData(): void {
+function drawDefaultData(): void {
     (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: ";
     let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
     canvas.innerHTML = "";
