@@ -176,15 +176,7 @@ function drawData(): void {
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
             toAdd.addEventListener("mouseover", (e) => {
-                let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
-                if (prevDatem != -1) {
-                    Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
-                        (el as HTMLElement).style.backgroundColor = "gray";
-                    });
-                };
-                (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
-                (e.target as HTMLElement).style.backgroundColor = "green";
-                (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + dataSet[index].valueOf().toString();
+                handleDatemHover(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -203,15 +195,7 @@ function drawData(): void {
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
             toAdd.addEventListener("mouseover", (e) => {
-                let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
-                if (prevDatem != -1) {
-                    Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
-                        (el as HTMLElement).style.backgroundColor = "gray";
-                    });
-                };
-                (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
-                (e.target as HTMLElement).style.backgroundColor = "green";
-                (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + dataSet[index].valueOf().toString();
+                handleDatemHover(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -251,4 +235,20 @@ function switchAvailabeAlgos(): void {
  */
 function getMaxDataSize(): Number {
     return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
+}
+
+/**
+ * Assigns my hovering event handler to the target of a MouseEvent
+ * @param e The MouseEvent to to retrieve a target from.
+ */
+function handleDatemHover(e:MouseEvent): void{
+    let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
+    if (prevDatem != -1) {
+        Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+            (el as HTMLElement).style.backgroundColor = "gray";
+        });
+    };
+    (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
+    (e.target as HTMLElement).style.backgroundColor = "#00ff00";
+    (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + (e.target as HTMLElement).id.replace("displayDatem", "");
 }
