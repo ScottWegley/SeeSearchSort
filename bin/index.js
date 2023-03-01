@@ -1,4 +1,14 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const delay = (ms) => new Promise(res => setTimeout(res, ms));
 /**An Enum representative of the two different types of algorithms the site currently supports. */
 var AlgoType;
 (function (AlgoType) {
@@ -46,6 +56,12 @@ let dataMode = DataMode.ASCENDING;
 let prevWidth;
 /** Store whether or not we are forcing the data set to be of max size. */
 let forceMaxSize = true;
+/** Store whether or not hover effects are currently allowed. */
+let allowHover = true;
+/** Stores whether or not the {@link dataSet} is currently sorted. */
+let currentlySorted = false;
+/** Stores whether or not an algorithm is current running. */
+let ALGO_RUNNING = false;
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
@@ -78,13 +94,17 @@ function injectScripts() {
     //Redraw the data when the size has changed.
     document.getElementById("dataSize").addEventListener("change", () => {
         redefineData(document.getElementById("dataSize").valueAsNumber);
-        drawData();
+        drawDefaultData();
     });
     //Redraw the data when the window horizontal size has changed.
-    window.addEventListener("resize", () => {
+    window.addEventListener("resize", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         if (prevWidth != window.innerWidth) {
             redefineData(forceMaxSize ? getMaxDataSize().valueOf() : document.getElementById("dataSize").valueAsNumber);
-            drawData();
+            drawDefaultData();
             prevWidth = window.innerWidth;
         }
     });
@@ -120,11 +140,12 @@ function validateSearchKey() {
  * Will not run if the desired {@link DataMode} is already active.
  */
 function updateDataMode(inMode) {
-    if (inMode != DataMode.RANDOM && inMode == dataMode) {
+    if (inMode != DataMode.RANDOM && inMode == dataMode && !currentlySorted) {
         return;
     }
     dataMode = inMode;
-    drawData();
+    currentlySorted = false;
+    drawDefaultData();
 }
 /**
  * Update the internal switch for forcing max size.
@@ -136,7 +157,7 @@ function updateForcedMaxSize(inState) {
         document.getElementById("dataSize").setAttribute("disabled", "true");
         document.getElementById("sizeLbl").setAttribute("disabled", "true");
         redefineData(getMaxDataSize().valueOf());
-        drawData();
+        drawDefaultData();
     }
     else {
         document.getElementById("dataSize").removeAttribute("disabled");
@@ -156,7 +177,7 @@ function redefineData(newSize) {
  * Clears all of the current data bars from the display.  Loop through the array of data and assign values in Ascending or Descending order.
  * If the {@link dataMode} is not {@link DataMode.RANDOM}, draw it.  Else it is randomized via the Fisher-Yates Algorithm and then drawn.
  */
-function drawData() {
+function drawDefaultData() {
     document.getElementById("hoveredDatem").textContent = "Hovered Value: ";
     let canvas = document.getElementById("dataDisplay");
     canvas.innerHTML = "";
@@ -234,14 +255,93 @@ function getMaxDataSize() {
  */
 function handleDatemHover(e) {
     var _a;
-    let prevDatem = parseInt((((_a = document.getElementById("hoveredDatem").textContent) === null || _a === void 0 ? void 0 : _a.substring(15)) || "-1"));
-    if (prevDatem != -1) {
-        Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
-            el.style.backgroundColor = "gray";
-        });
+    if (allowHover) {
+        let prevDatem = parseInt((((_a = document.getElementById("hoveredDatem").textContent) === null || _a === void 0 ? void 0 : _a.substring(15)) || "-1"));
+        if (prevDatem != -1) {
+            Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+                el.style.backgroundColor = "gray";
+            });
+        }
+        ;
+        e.target.classList.add("currentlyHoveredDatem");
+        e.target.style.backgroundColor = "#00ff00";
+        document.getElementById("hoveredDatem").textContent = "Hovered Value: " + e.target.id.replace("displayDatem", "");
     }
-    ;
-    e.target.classList.add("currentlyHoveredDatem");
-    e.target.style.backgroundColor = "#00ff00";
-    document.getElementById("hoveredDatem").textContent = "Hovered Value: " + e.target.id.replace("displayDatem", "");
+}
+/** Disables the on hover effexts for datem divs via {@link allowHover}. Removes any active effects. */
+function disableHoverMode() {
+    allowHover = false;
+    Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+        el.style.backgroundColor = "gray";
+    });
+}
+/** Function to execute insertion sort. */
+function insertionSort() {
+    return __awaiter(this, void 0, void 0, function* () {
+        ALGO_RUNNING = true;
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
+        for (let index = 0; index < localDataSet.length; index++) {
+            let element = localDataSet[index]; //We're trying to find a home for this guy.
+            let location = index - 1; //We're going to start checking the guy before us.
+            while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+                localDataSet[location + 1] = localDataSet[location];
+                location--;
+                yield delay(5);
+                drawLocalSet(localDataSet);
+            }
+            localDataSet[location + 1] = element;
+            yield delay(5);
+            drawLocalSet(localDataSet);
+        }
+        drawLocalSet(localDataSet);
+        dataSet = localDataSet;
+        currentlySorted = true;
+        ALGO_RUNNING = false;
+    });
+}
+function drawLocalSet(localDataSet) {
+    let canvas = document.getElementById("dataDisplay");
+    canvas.innerHTML = "";
+    for (let index = 0; index < localDataSet.length; index++) {
+        var toAdd = document.createElement("div");
+        toAdd.style.height = (localDataSet[index].valueOf() * 3).toString() + "px";
+        toAdd.style.width = "9.5px";
+        toAdd.style.backgroundColor = "gray";
+        toAdd.style.display = "inline-block";
+        toAdd.id = "displayDatem" + localDataSet[index];
+        toAdd.addEventListener("mouseover", (e) => {
+            handleDatemHover(e);
+        });
+        canvas.appendChild(toAdd);
+    }
+}
+/**
+ * A function to swap two nodes.
+ * Sourced from: br4nnigan on StackOverflow
+ * @param n1 The first node involved in swapping.
+ * @param n2 The second node involved in swapping.
+ */
+function swapNodes(n1, n2) {
+    var p1 = n1.parentNode;
+    var p2 = n2.parentNode;
+    var i1 = -1;
+    var i2 = -1;
+    if (!p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1))
+        return;
+    for (var i = 0; i < p1.children.length; i++) {
+        if (p1.children[i].isEqualNode(n1)) {
+            i1 = i;
+        }
+    }
+    for (var i = 0; i < p2.children.length; i++) {
+        if (p2.children[i].isEqualNode(n2)) {
+            i2 = i;
+        }
+    }
+    if (p1.isEqualNode(p2) && i1 < i2) {
+        i2++;
+    }
+    p1.insertBefore(n2, p1.children[i1]);
+    p2.insertBefore(n1, p2.children[i2]);
 }
