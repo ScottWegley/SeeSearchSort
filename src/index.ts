@@ -1,3 +1,5 @@
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 /**An Enum representative of the two different types of algorithms the site currently supports. */
 enum AlgoType {
     /**Represents the Sorting Algorithm Selection */
@@ -49,6 +51,8 @@ let forceMaxSize: Boolean = true;
 let allowHover: Boolean = true;
 /** Stores whether or not the {@link dataSet} is currently sorted. */
 let currentlySorted: Boolean = false;
+/** Stores whether or not an algorithm is current running. */
+let ALGO_RUNNING:Boolean = false;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -86,7 +90,11 @@ function injectScripts(): void {
         drawDefaultData();
     });
     //Redraw the data when the window horizontal size has changed.
-    window.addEventListener("resize", () => {
+    window.addEventListener("resize", (ev) => {
+        if(ALGO_RUNNING){
+            ev.preventDefault();
+            return;
+        }
         if (prevWidth != window.innerWidth) {
             redefineData(forceMaxSize ? getMaxDataSize().valueOf() : (document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
             drawDefaultData();
@@ -239,7 +247,6 @@ function switchAvailabeAlgos(): void {
  * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down.
  */
 function getMaxDataSize(): Number {
-    return 5;
     return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
 }
 
@@ -270,23 +277,44 @@ function disableHoverMode(): void {
 }
 
 /** Function to execute insertion sort. */
-function insertionSort(): void {
+async function insertionSort(): Promise<void> {
+    ALGO_RUNNING = true;
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
     for (let index = 0; index < localDataSet.length; index++) {
         let element = localDataSet[index]; //We're trying to find a home for this guy.
         let location = index - 1; //We're going to start checking the guy before us.
-        while (location >= 0) { //Until we hit the bottom of the list
-            if (localDataSet[location] > element) {
-                localDataSet[location + 1] = localDataSet[location];
-                swapNodes(canvas[location + 1],canvas[location]);
-                location--;
-            }
+        while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+            localDataSet[location + 1] = localDataSet[location];
+            location--;
+            await delay(5);
+            drawLocalSet(localDataSet);
         }
         localDataSet[location + 1] = element;
+        await delay(5);
+        drawLocalSet(localDataSet);
     }
+    drawLocalSet(localDataSet);
     dataSet = localDataSet;
     currentlySorted = true;
+    ALGO_RUNNING = false;
+}
+
+function drawLocalSet(localDataSet: Array<Number>): void {
+    let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
+    canvas.innerHTML = "";
+    for (let index = 0; index < localDataSet.length; index++) {
+        var toAdd = document.createElement("div");
+        toAdd.style.height = (localDataSet[index].valueOf() * 3).toString() + "px";
+        toAdd.style.width = "9.5px";
+        toAdd.style.backgroundColor = "gray";
+        toAdd.style.display = "inline-block";
+        toAdd.id = "displayDatem" + localDataSet[index];
+        toAdd.addEventListener("mouseover", (e) => {
+            handleDatemHover(e);
+        });
+        canvas.appendChild(toAdd);
+    }
 }
 
 /**
@@ -295,8 +323,7 @@ function insertionSort(): void {
  * @param n1 The first node involved in swapping.
  * @param n2 The second node involved in swapping.
  */
-function swapNodes(n1: Node, n2: Node):void {
-
+function swapNodes(n1: Node, n2: Node): void {
     var p1 = n1.parentNode;
     var p2 = n2.parentNode;
     var i1: number = -1;
