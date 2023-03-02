@@ -40,6 +40,9 @@ enum DataMode {
 let barWidthPx: Number = 9.5;
 /** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
 let currentAlgos: AlgoType = AlgoType.SORTING_ALGORITHMS;
+/** Represents the current selected algorithm. */
+let ACTIVE_ALGORITHM: SortAlgos | SearchAlgos;
+/** Internal record of our data values */
 let dataSet: Array<Number> = new Array<Number>(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
 let dataMode: DataMode = DataMode.ASCENDING;
@@ -141,6 +144,13 @@ function updateDataMode(inMode: DataMode): void {
     dataMode = inMode;
     currentlySorted = false;
     drawDefaultData();
+}
+
+/**
+ * Updates the interally stored active algorithm.
+ * Also enables/disables the run button.
+ */
+function updateActiveAlgorithm(): void {
 }
 
 /**
