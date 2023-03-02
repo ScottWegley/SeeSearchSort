@@ -55,7 +55,7 @@ let allowHover: Boolean = true;
 /** Stores whether or not the {@link dataSet} is currently sorted. */
 let currentlySorted: Boolean = false;
 /** Stores whether or not an algorithm is current running. */
-let ALGO_RUNNING:Boolean = false;
+let ALGO_RUNNING: Boolean = false;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -81,10 +81,25 @@ function injectScripts(): void {
     Array.from(document.querySelectorAll("input[name=\"algoType\"]")).forEach((el) => {
         el.addEventListener("change", () => {
             switchAvailabeAlgos();
+            updateActiveAlgorithm();
+        });
+    });
+    //Updates which algorithm is selected and enables/disables the run button
+    Array.from(document.querySelectorAll("input.searchingAlgo[type=\"radio\"]")).forEach((el) => {
+        (el as HTMLInputElement).addEventListener("change", () => {
+            updateActiveAlgorithm();
+        });
+    });
+    Array.from(document.querySelectorAll("input.sortingAlgo[type=\"radio\"]")).forEach((el) => {
+        (el as HTMLInputElement).addEventListener("change", () => {
+            updateActiveAlgorithm();
         });
     });
     //Stop permature form submission.
     (document.getElementById("dataSettings") as HTMLFormElement).addEventListener("submit", (ev: SubmitEvent) => {
+        ev.preventDefault();
+    });
+    (document.getElementById("dataDetails") as HTMLFormElement).addEventListener("submit", (ev: SubmitEvent) => {
         ev.preventDefault();
     });
     //Redraw the data when the size has changed.
@@ -94,7 +109,7 @@ function injectScripts(): void {
     });
     //Redraw the data when the window horizontal size has changed.
     window.addEventListener("resize", (ev) => {
-        if(ALGO_RUNNING){
+        if (ALGO_RUNNING) {
             ev.preventDefault();
             return;
         }
@@ -287,10 +302,10 @@ function switchAvailabeAlgos(): void {
 }
 
 /**
- * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down.
+ * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down, minus one.
  */
 function getMaxDataSize(): Number {
-    return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
+    return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3)) - 1;
 }
 
 /**
@@ -325,11 +340,11 @@ function disableHoverMode(): void {
  * @param g The g value of the color.
  * @param b The b value of the color.
  */
-function setDatemRGB(r:Number,g:Number,b:Number){
+function setDatemRGB(r: Number, g: Number, b: Number) {
     r = r >= 0 ? (r <= 255 ? r : 255) : 0;
     g = g >= 0 ? (g <= 255 ? g : 255) : 0;
     b = b >= 0 ? (b <= 255 ? b : 255) : 0;
-    let RGBString:Array<String> = new Array<String>(3);
+    let RGBString: Array<String> = new Array<String>(3);
     RGBString[0] = r.toString(16);
     RGBString[0] = RGBString[0].length == 1 ? "0" + RGBString[0] : RGBString[0];
     RGBString[1] = g.toString(16);
@@ -344,7 +359,7 @@ function setDatemRGB(r:Number,g:Number,b:Number){
  * Function to set the entire display to a color useing a string Color
  * @param color A color formatted as #XX00XX or a named color.
  */
-function setDatemColor(color:string){
+function setDatemColor(color: string) {
     Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children).forEach((el) => {
         (el as HTMLElement).style.backgroundColor = color;
     });
@@ -376,6 +391,7 @@ async function insertionSort(): Promise<void> {
         (canvas[location + 1] as HTMLElement).id = elId;
     }
     dataSet = localDataSet;
+    setDatemColor("gray");
     currentlySorted = true;
     ALGO_RUNNING = false;
     allowHover = true;
