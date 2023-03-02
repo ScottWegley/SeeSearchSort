@@ -17,24 +17,20 @@ var AlgoType;
     /**Represents the Searching Algorithm Selection */
     AlgoType[AlgoType["SEARCHING_ALGORITHMS"] = 1] = "SEARCHING_ALGORITHMS";
 })(AlgoType || (AlgoType = {}));
-/**An Enum Representative of our Sorting Algorithms. */
-var SortAlgos;
-(function (SortAlgos) {
-    /**Represents the Insertion Sort Algorithm. */
-    SortAlgos[SortAlgos["INSERTION_SORT"] = 0] = "INSERTION_SORT";
-    /**Represents the Bubble Sort Algorithm. */
-    SortAlgos[SortAlgos["BUBBLE_SORT"] = 1] = "BUBBLE_SORT";
-    /**Represents the Cocktail Sort Algorithm. */
-    SortAlgos[SortAlgos["COCKTAIL_SORT"] = 2] = "COCKTAIL_SORT";
-})(SortAlgos || (SortAlgos = {}));
 /**An Enum Representative of our Searching Algorithms. */
-var SearchAlgos;
-(function (SearchAlgos) {
+var Algos;
+(function (Algos) {
     /**Represents the Binary Search Algorithm. */
-    SearchAlgos[SearchAlgos["BINARY_SEARCH"] = 0] = "BINARY_SEARCH";
+    Algos[Algos["BINARY_SEARCH"] = 0] = "BINARY_SEARCH";
     /**Represents the Fibonacci Search Algorithm. */
-    SearchAlgos[SearchAlgos["FIBONACCI_SEARCH"] = 1] = "FIBONACCI_SEARCH";
-})(SearchAlgos || (SearchAlgos = {}));
+    Algos[Algos["FIBONACCI_SEARCH"] = 1] = "FIBONACCI_SEARCH";
+    /**Represents the Insertion Sort Algorithm. */
+    Algos[Algos["INSERTION_SORT"] = 2] = "INSERTION_SORT";
+    /**Represents the Bubble Sort Algorithm. */
+    Algos[Algos["BUBBLE_SORT"] = 3] = "BUBBLE_SORT";
+    /**Represents the Cocktail Sort Algorithm. */
+    Algos[Algos["COCKTAIL_SORT"] = 4] = "COCKTAIL_SORT";
+})(Algos || (Algos = {}));
 /** An Enum representative of the three different data orders. */
 var DataMode;
 (function (DataMode) {
@@ -49,6 +45,9 @@ var DataMode;
 let barWidthPx = 9.5;
 /** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
 let currentAlgos = AlgoType.SORTING_ALGORITHMS;
+/** Represents the current selected algorithm. */
+let ACTIVE_ALGORITHM;
+/** Internal record of our data values */
 let dataSet = new Array(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
 let dataMode = DataMode.ASCENDING;
@@ -85,14 +84,33 @@ function injectScripts() {
     Array.from(document.querySelectorAll("input[name=\"algoType\"]")).forEach((el) => {
         el.addEventListener("change", () => {
             switchAvailabeAlgos();
+            updateActiveAlgorithm();
+        });
+    });
+    //Updates which algorithm is selected and enables/disables the run button
+    Array.from(document.querySelectorAll("input.searchingAlgo[type=\"radio\"]")).forEach((el) => {
+        el.addEventListener("change", () => {
+            updateActiveAlgorithm();
+        });
+    });
+    Array.from(document.querySelectorAll("input.sortingAlgo[type=\"radio\"]")).forEach((el) => {
+        el.addEventListener("change", () => {
+            updateActiveAlgorithm();
         });
     });
     //Stop permature form submission.
     document.getElementById("dataSettings").addEventListener("submit", (ev) => {
         ev.preventDefault();
     });
+    document.getElementById("dataDetails").addEventListener("submit", (ev) => {
+        ev.preventDefault();
+    });
     //Redraw the data when the size has changed.
-    document.getElementById("dataSize").addEventListener("change", () => {
+    document.getElementById("dataSize").addEventListener("change", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         redefineData(document.getElementById("dataSize").valueAsNumber);
         drawDefaultData();
     });
@@ -109,22 +127,46 @@ function injectScripts() {
         }
     });
     //Switch the data mode when the data mode buttons are clicked.
-    document.getElementById("ascndBtn").addEventListener("click", () => {
+    document.getElementById("ascndBtn").addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.ASCENDING);
     });
-    document.getElementById("dscndBtn").addEventListener("click", () => {
+    document.getElementById("dscndBtn").addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.DESCENDING);
     });
-    document.getElementById("rndmBtn").addEventListener("click", () => {
+    document.getElementById("rndmBtn").addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.RANDOM);
     });
     //Checkbox to force the data set to be the max size always.
-    document.getElementById("maxSize").addEventListener("change", () => {
+    document.getElementById("maxSize").addEventListener("change", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateForcedMaxSize(document.getElementById("maxSize").checked);
     });
     //Validation for a number input that stores a search key.
     document.getElementById("searchKey").addEventListener("change", () => {
         validateSearchKey();
+    });
+    //Run the active algorithm on the click of the run button.
+    document.getElementById("btnRun").addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
+        runAlgorithm();
     });
 }
 /**
@@ -146,6 +188,45 @@ function updateDataMode(inMode) {
     dataMode = inMode;
     currentlySorted = false;
     drawDefaultData();
+}
+/**
+ * Updates the interally stored active algorithm.
+ * Also enables/disables the run button.
+ */
+function updateActiveAlgorithm() {
+    let state = false;
+    Array.from(document.querySelectorAll("input.searchingAlgo[type=\"radio\"]")).forEach((el) => {
+        if (el.checked) {
+            state = true;
+            switch (el.id) {
+                case "binary":
+                    ACTIVE_ALGORITHM = Algos.BINARY_SEARCH;
+                    break;
+                case "fibonacci":
+                    ACTIVE_ALGORITHM = Algos.FIBONACCI_SEARCH;
+                    break;
+            }
+        }
+    });
+    if (!state) {
+        Array.from(document.querySelectorAll("input.sortingAlgo[type=\"radio\"]")).forEach((el) => {
+            if (el.checked) {
+                state = true;
+                switch (el.id) {
+                    case "insertion":
+                        ACTIVE_ALGORITHM = Algos.INSERTION_SORT;
+                        break;
+                    case "bubble":
+                        ACTIVE_ALGORITHM = Algos.BUBBLE_SORT;
+                        break;
+                    case "cocktail":
+                        ACTIVE_ALGORITHM = Algos.COCKTAIL_SORT;
+                        break;
+                }
+            }
+        });
+    }
+    state ? document.getElementById("btnRun").removeAttribute("disabled") : document.getElementById("btnRun").setAttribute("disabled", "true");
 }
 /**
  * Update the internal switch for forcing max size.
@@ -244,10 +325,10 @@ function switchAvailabeAlgos() {
     }
 }
 /**
- * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down.
+ * @returns The inner width of the window in pixels, divided by the width of each bar ({@link barWidthPx}) plus 0.3, rounded down, minus one.
  */
 function getMaxDataSize() {
-    return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3));
+    return Math.floor(window.innerWidth / (barWidthPx.valueOf() + 0.3)) - 1;
 }
 /**
  * Assigns my hovering event handler to the target of a MouseEvent
@@ -275,11 +356,61 @@ function disableHoverMode() {
         el.style.backgroundColor = "gray";
     });
 }
-/** Function to execute insertion sort. */
-function insertionSort() {
+/**
+ * Function to set the entire display to a color in RGB format (clamped to 0-255, inclusive, for all values).
+ * @param r The r value of the color.
+ * @param g The g value of the color.
+ * @param b The b value of the color.
+ */
+function setDatemRGB(r, g, b) {
+    r = r >= 0 ? (r <= 255 ? r : 255) : 0;
+    g = g >= 0 ? (g <= 255 ? g : 255) : 0;
+    b = b >= 0 ? (b <= 255 ? b : 255) : 0;
+    let RGBString = new Array(3);
+    RGBString[0] = r.toString(16);
+    RGBString[0] = RGBString[0].length == 1 ? "0" + RGBString[0] : RGBString[0];
+    RGBString[1] = g.toString(16);
+    RGBString[1] = RGBString[1].length == 1 ? "0" + RGBString[1] : RGBString[1];
+    RGBString[2] = b.toString(16);
+    RGBString[2] = RGBString[2].length == 1 ? "0" + RGBString[2] : RGBString[2];
+    let color = "#" + RGBString[0] + RGBString[1] + RGBString[2];
+    setDatemColor(color);
+}
+/**
+ * Function to set the entire display to a color useing a string Color
+ * @param color A color formatted as #XX00XX or a named color.
+ */
+function setDatemColor(color) {
+    Array.from(document.getElementById("dataDisplay").children).forEach((el) => {
+        el.style.backgroundColor = color;
+    });
+}
+function runAlgorithm() {
     return __awaiter(this, void 0, void 0, function* () {
         disableHoverMode();
         ALGO_RUNNING = true;
+        switch (ACTIVE_ALGORITHM) {
+            case Algos.BINARY_SEARCH:
+                break;
+            case Algos.FIBONACCI_SEARCH:
+                break;
+            case Algos.INSERTION_SORT:
+                yield insertionSort();
+                break;
+            case Algos.BUBBLE_SORT:
+                break;
+            case Algos.COCKTAIL_SORT:
+                break;
+        }
+        setDatemColor("gray");
+        currentlySorted = true;
+        ALGO_RUNNING = false;
+        allowHover = true;
+    });
+}
+/** Function to execute insertion sort. */
+function insertionSort() {
+    return __awaiter(this, void 0, void 0, function* () {
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
         for (let index = 0; index < localDataSet.length; index++) {
@@ -302,37 +433,5 @@ function insertionSort() {
             canvas[location + 1].id = elId;
         }
         dataSet = localDataSet;
-        currentlySorted = true;
-        ALGO_RUNNING = false;
-        allowHover = true;
     });
-}
-/**
- * A function to swap two nodes.
- * Sourced from: br4nnigan on StackOverflow
- * @param n1 The first node involved in swapping.
- * @param n2 The second node involved in swapping.
- */
-function swapNodes(n1, n2) {
-    var p1 = n1.parentNode;
-    var p2 = n2.parentNode;
-    var i1 = -1;
-    var i2 = -1;
-    if (!p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1))
-        return;
-    for (var i = 0; i < p1.children.length; i++) {
-        if (p1.children[i].isEqualNode(n1)) {
-            i1 = i;
-        }
-    }
-    for (var i = 0; i < p2.children.length; i++) {
-        if (p2.children[i].isEqualNode(n2)) {
-            i2 = i;
-        }
-    }
-    if (p1.isEqualNode(p2) && i1 < i2) {
-        i2++;
-    }
-    p1.insertBefore(n2, p1.children[i1]);
-    p2.insertBefore(n1, p2.children[i2]);
 }
