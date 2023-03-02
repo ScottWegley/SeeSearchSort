@@ -278,43 +278,33 @@ function disableHoverMode(): void {
 
 /** Function to execute insertion sort. */
 async function insertionSort(): Promise<void> {
+    disableHoverMode();
     ALGO_RUNNING = true;
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
     for (let index = 0; index < localDataSet.length; index++) {
         let element = localDataSet[index]; //We're trying to find a home for this guy.
+        let elHeight = (canvas[index] as HTMLElement).style.height;
+        let elId = (canvas[index] as HTMLElement).id;
         let location = index - 1; //We're going to start checking the guy before us.
         while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+            (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
+            (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
             localDataSet[location + 1] = localDataSet[location];
+            (canvas[location + 1] as HTMLElement).style.height = (canvas[location] as HTMLElement).style.height;
+            (canvas[location + 1] as HTMLElement).id = (canvas[location] as HTMLElement).id;
+            await delay(1);
             location--;
-            await delay(5);
-            drawLocalSet(localDataSet);
         }
+        await delay(1);
         localDataSet[location + 1] = element;
-        await delay(5);
-        drawLocalSet(localDataSet);
+        (canvas[location + 1] as HTMLElement).style.height = elHeight;
+        (canvas[location + 1] as HTMLElement).id = elId;
     }
-    drawLocalSet(localDataSet);
     dataSet = localDataSet;
     currentlySorted = true;
     ALGO_RUNNING = false;
-}
-
-function drawLocalSet(localDataSet: Array<Number>): void {
-    let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
-    canvas.innerHTML = "";
-    for (let index = 0; index < localDataSet.length; index++) {
-        var toAdd = document.createElement("div");
-        toAdd.style.height = (localDataSet[index].valueOf() * 3).toString() + "px";
-        toAdd.style.width = "9.5px";
-        toAdd.style.backgroundColor = "gray";
-        toAdd.style.display = "inline-block";
-        toAdd.id = "displayDatem" + localDataSet[index];
-        toAdd.addEventListener("mouseover", (e) => {
-            handleDatemHover(e);
-        });
-        canvas.appendChild(toAdd);
-    }
+    allowHover = true;
 }
 
 /**

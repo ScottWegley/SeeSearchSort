@@ -278,43 +278,34 @@ function disableHoverMode() {
 /** Function to execute insertion sort. */
 function insertionSort() {
     return __awaiter(this, void 0, void 0, function* () {
+        disableHoverMode();
         ALGO_RUNNING = true;
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
         for (let index = 0; index < localDataSet.length; index++) {
             let element = localDataSet[index]; //We're trying to find a home for this guy.
+            let elHeight = canvas[index].style.height;
+            let elId = canvas[index].id;
             let location = index - 1; //We're going to start checking the guy before us.
             while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+                canvas[location + 1].style.backgroundColor = "#00ff00";
+                canvas[location].style.backgroundColor = "#00ff00";
                 localDataSet[location + 1] = localDataSet[location];
+                canvas[location + 1].style.height = canvas[location].style.height;
+                canvas[location + 1].id = canvas[location].id;
+                yield delay(1);
                 location--;
-                yield delay(5);
-                drawLocalSet(localDataSet);
             }
+            yield delay(1);
             localDataSet[location + 1] = element;
-            yield delay(5);
-            drawLocalSet(localDataSet);
+            canvas[location + 1].style.height = elHeight;
+            canvas[location + 1].id = elId;
         }
-        drawLocalSet(localDataSet);
         dataSet = localDataSet;
         currentlySorted = true;
         ALGO_RUNNING = false;
+        allowHover = true;
     });
-}
-function drawLocalSet(localDataSet) {
-    let canvas = document.getElementById("dataDisplay");
-    canvas.innerHTML = "";
-    for (let index = 0; index < localDataSet.length; index++) {
-        var toAdd = document.createElement("div");
-        toAdd.style.height = (localDataSet[index].valueOf() * 3).toString() + "px";
-        toAdd.style.width = "9.5px";
-        toAdd.style.backgroundColor = "gray";
-        toAdd.style.display = "inline-block";
-        toAdd.id = "displayDatem" + localDataSet[index];
-        toAdd.addEventListener("mouseover", (e) => {
-            handleDatemHover(e);
-        });
-        canvas.appendChild(toAdd);
-    }
 }
 /**
  * A function to swap two nodes.
