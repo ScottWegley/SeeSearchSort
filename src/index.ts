@@ -151,6 +151,39 @@ function updateDataMode(inMode: DataMode): void {
  * Also enables/disables the run button.
  */
 function updateActiveAlgorithm(): void {
+    let state: boolean = false;
+    Array.from(document.querySelectorAll("input.searchingAlgo[type=\"radio\"]")).forEach((el) => {
+        if ((el as HTMLInputElement).checked) {
+            state = true;
+            switch ((el as HTMLElement).id) {
+                case "binary":
+                    ACTIVE_ALGORITHM = SearchAlgos.BINARY_SEARCH;
+                    break;
+                case "fibonacci":
+                    ACTIVE_ALGORITHM = SearchAlgos.FIBONACCI_SEARCH;
+                    break;
+            }
+        }
+    });
+    if (!state) {
+        Array.from(document.querySelectorAll("input.sortingAlgo[type=\"radio\"]")).forEach((el) => {
+            if ((el as HTMLInputElement).checked) {
+                state = true;
+                switch ((el as HTMLElement).id) {
+                    case "insertion":
+                        ACTIVE_ALGORITHM = SortAlgos.INSERTION_SORT;
+                        break;
+                    case "bubble":
+                        ACTIVE_ALGORITHM = SortAlgos.BUBBLE_SORT;
+                        break;
+                    case "cocktail":
+                        ACTIVE_ALGORITHM = SortAlgos.COCKTAIL_SORT;
+                        break;
+                }
+            }
+        });
+    }
+    state ? (document.getElementById("btnRun") as HTMLButtonElement).removeAttribute("disabled") : (document.getElementById("btnRun") as HTMLButtonElement).setAttribute("disabled", "true");
 }
 
 /**
