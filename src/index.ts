@@ -137,6 +137,10 @@ function injectScripts(): void {
     (document.getElementById("searchKey") as HTMLInputElement).addEventListener("change", () => {
         validateSearchKey();
     });
+    //Run the active algorithm on the click of the run button.
+    (document.getElementById("btnRun") as HTMLButtonElement).addEventListener("click", () => {
+        runAlgorithm();
+    });
 }
 
 /**
@@ -365,10 +369,32 @@ function setDatemColor(color: string) {
     });
 }
 
-/** Function to execute insertion sort. */
-async function insertionSort(): Promise<void> {
+async function runAlgorithm(): Promise<void> {
     disableHoverMode();
     ALGO_RUNNING = true;
+    switch (ACTIVE_ALGORITHM) {
+        case SearchAlgos.BINARY_SEARCH:
+            
+            break;
+        case SearchAlgos.FIBONACCI_SEARCH:
+            break;
+        case SortAlgos.INSERTION_SORT:
+            await insertionSort();
+            break;
+        case SortAlgos.BUBBLE_SORT:
+            break;
+        case SortAlgos.COCKTAIL_SORT:
+            break;
+        
+    }
+    setDatemColor("gray");
+    currentlySorted = true;
+    ALGO_RUNNING = false;
+    allowHover = true;
+}
+
+/** Function to execute insertion sort. */
+async function insertionSort(): Promise<void> {
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
     for (let index = 0; index < localDataSet.length; index++) {
@@ -391,8 +417,4 @@ async function insertionSort(): Promise<void> {
         (canvas[location + 1] as HTMLElement).id = elId;
     }
     dataSet = localDataSet;
-    setDatemColor("gray");
-    currentlySorted = true;
-    ALGO_RUNNING = false;
-    allowHover = true;
 }
