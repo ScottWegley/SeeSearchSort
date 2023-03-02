@@ -99,7 +99,11 @@ function injectScripts(): void {
         ev.preventDefault();
     });
     //Redraw the data when the size has changed.
-    (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", () => {
+    (document.getElementById("dataSize") as HTMLInputElement).addEventListener("change", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         redefineData((document.getElementById("dataSize") as HTMLInputElement).valueAsNumber);
         drawDefaultData();
     });
@@ -116,17 +120,33 @@ function injectScripts(): void {
         }
     });
     //Switch the data mode when the data mode buttons are clicked.
-    (document.getElementById("ascndBtn") as HTMLButtonElement).addEventListener("click", () => {
+    (document.getElementById("ascndBtn") as HTMLButtonElement).addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.ASCENDING);
     });
-    (document.getElementById("dscndBtn") as HTMLButtonElement).addEventListener("click", () => {
+    (document.getElementById("dscndBtn") as HTMLButtonElement).addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.DESCENDING);
     });
-    (document.getElementById("rndmBtn") as HTMLButtonElement).addEventListener("click", () => {
+    (document.getElementById("rndmBtn") as HTMLButtonElement).addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateDataMode(DataMode.RANDOM);
     });
     //Checkbox to force the data set to be the max size always.
-    (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", () => {
+    (document.getElementById("maxSize") as HTMLInputElement).addEventListener("change", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         updateForcedMaxSize((document.getElementById("maxSize") as HTMLInputElement).checked);
     });
     //Validation for a number input that stores a search key.
@@ -134,7 +154,11 @@ function injectScripts(): void {
         validateSearchKey();
     });
     //Run the active algorithm on the click of the run button.
-    (document.getElementById("btnRun") as HTMLButtonElement).addEventListener("click", () => {
+    (document.getElementById("btnRun") as HTMLButtonElement).addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
         runAlgorithm();
     });
 }
