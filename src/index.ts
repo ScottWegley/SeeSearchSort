@@ -276,6 +276,37 @@ function disableHoverMode(): void {
     });
 }
 
+/**
+ * Function to set the entire display to a color in RGB format (clamped to 0-255, inclusive, for all values).
+ * @param r The r value of the color.
+ * @param g The g value of the color.
+ * @param b The b value of the color.
+ */
+function setDatemRGB(r:Number,g:Number,b:Number){
+    r = r >= 0 ? (r <= 255 ? r : 255) : 0;
+    g = g >= 0 ? (g <= 255 ? g : 255) : 0;
+    b = b >= 0 ? (b <= 255 ? b : 255) : 0;
+    let RGBString:Array<String> = new Array<String>(3);
+    RGBString[0] = r.toString(16);
+    RGBString[0] = RGBString[0].length == 1 ? "0" + RGBString[0] : RGBString[0];
+    RGBString[1] = g.toString(16);
+    RGBString[1] = RGBString[1].length == 1 ? "0" + RGBString[1] : RGBString[1];
+    RGBString[2] = b.toString(16);
+    RGBString[2] = RGBString[2].length == 1 ? "0" + RGBString[2] : RGBString[2];
+    let color = "#" + RGBString[0] + RGBString[1] + RGBString[2];
+    setDatemColor(color);
+}
+
+/**
+ * Function to set the entire display to a color useing a string Color
+ * @param color A color formatted as #XX00XX or a named color.
+ */
+function setDatemColor(color:string){
+    Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children).forEach((el) => {
+        (el as HTMLElement).style.backgroundColor = color;
+    });
+}
+
 /** Function to execute insertion sort. */
 async function insertionSort(): Promise<void> {
     disableHoverMode();
