@@ -287,34 +287,13 @@ async function insertionSort(): Promise<void> {
         while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
             localDataSet[location + 1] = localDataSet[location];
             location--;
-            await delay(5);
-            drawLocalSet(localDataSet);
+
         }
         localDataSet[location + 1] = element;
-        await delay(5);
-        drawLocalSet(localDataSet);
     }
-    drawLocalSet(localDataSet);
     dataSet = localDataSet;
     currentlySorted = true;
     ALGO_RUNNING = false;
-}
-
-function drawLocalSet(localDataSet: Array<Number>): void {
-    let canvas: HTMLDivElement = document.getElementById("dataDisplay") as HTMLDivElement;
-    canvas.innerHTML = "";
-    for (let index = 0; index < localDataSet.length; index++) {
-        var toAdd = document.createElement("div");
-        toAdd.style.height = (localDataSet[index].valueOf() * 3).toString() + "px";
-        toAdd.style.width = "9.5px";
-        toAdd.style.backgroundColor = "gray";
-        toAdd.style.display = "inline-block";
-        toAdd.id = "displayDatem" + localDataSet[index];
-        toAdd.addEventListener("mouseover", (e) => {
-            handleDatemHover(e);
-        });
-        canvas.appendChild(toAdd);
-    }
 }
 
 /**
