@@ -8,22 +8,18 @@ enum AlgoType {
     SEARCHING_ALGORITHMS
 }
 
-/**An Enum Representative of our Sorting Algorithms. */
-enum SortAlgos {
+/**An Enum Representative of our Searching Algorithms. */
+enum Algos {
+    /**Represents the Binary Search Algorithm. */
+    BINARY_SEARCH,
+    /**Represents the Fibonacci Search Algorithm. */
+    FIBONACCI_SEARCH,
     /**Represents the Insertion Sort Algorithm. */
     INSERTION_SORT,
     /**Represents the Bubble Sort Algorithm. */
     BUBBLE_SORT,
     /**Represents the Cocktail Sort Algorithm. */
     COCKTAIL_SORT
-}
-
-/**An Enum Representative of our Searching Algorithms. */
-enum SearchAlgos {
-    /**Represents the Binary Search Algorithm. */
-    BINARY_SEARCH,
-    /**Represents the Fibonacci Search Algorithm. */
-    FIBONACCI_SEARCH
 }
 
 /** An Enum representative of the three different data orders. */
@@ -41,7 +37,7 @@ let barWidthPx: Number = 9.5;
 /** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
 let currentAlgos: AlgoType = AlgoType.SORTING_ALGORITHMS;
 /** Represents the current selected algorithm. */
-let ACTIVE_ALGORITHM: SortAlgos | SearchAlgos;
+let ACTIVE_ALGORITHM: Algos;
 /** Internal record of our data values */
 let dataSet: Array<Number> = new Array<Number>(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
@@ -176,10 +172,10 @@ function updateActiveAlgorithm(): void {
             state = true;
             switch ((el as HTMLElement).id) {
                 case "binary":
-                    ACTIVE_ALGORITHM = SearchAlgos.BINARY_SEARCH;
+                    ACTIVE_ALGORITHM = Algos.BINARY_SEARCH;
                     break;
                 case "fibonacci":
-                    ACTIVE_ALGORITHM = SearchAlgos.FIBONACCI_SEARCH;
+                    ACTIVE_ALGORITHM = Algos.FIBONACCI_SEARCH;
                     break;
             }
         }
@@ -190,13 +186,13 @@ function updateActiveAlgorithm(): void {
                 state = true;
                 switch ((el as HTMLElement).id) {
                     case "insertion":
-                        ACTIVE_ALGORITHM = SortAlgos.INSERTION_SORT;
+                        ACTIVE_ALGORITHM = Algos.INSERTION_SORT;
                         break;
                     case "bubble":
-                        ACTIVE_ALGORITHM = SortAlgos.BUBBLE_SORT;
+                        ACTIVE_ALGORITHM = Algos.BUBBLE_SORT;
                         break;
                     case "cocktail":
-                        ACTIVE_ALGORITHM = SortAlgos.COCKTAIL_SORT;
+                        ACTIVE_ALGORITHM = Algos.COCKTAIL_SORT;
                         break;
                 }
             }
@@ -373,17 +369,17 @@ async function runAlgorithm(): Promise<void> {
     disableHoverMode();
     ALGO_RUNNING = true;
     switch (ACTIVE_ALGORITHM) {
-        case SearchAlgos.BINARY_SEARCH:
+        case Algos.BINARY_SEARCH:
             
             break;
-        case SearchAlgos.FIBONACCI_SEARCH:
+        case Algos.FIBONACCI_SEARCH:
             break;
-        case SortAlgos.INSERTION_SORT:
+        case Algos.INSERTION_SORT:
             await insertionSort();
             break;
-        case SortAlgos.BUBBLE_SORT:
+        case Algos.BUBBLE_SORT:
             break;
-        case SortAlgos.COCKTAIL_SORT:
+        case Algos.COCKTAIL_SORT:
             break;
         
     }
