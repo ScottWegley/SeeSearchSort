@@ -458,19 +458,15 @@ async function bubbleSort(): Promise<void> {
                 swapped = true;
                 let plusOneHeight = (canvas[index + 1] as HTMLElement).style.height;
                 let plusOneId = (canvas[index + 1] as HTMLElement).id;
-                let plusOneColor = (canvas[index + 1] as HTMLElement).style.backgroundColor;
                 (canvas[index + 1] as HTMLElement).style.height = (canvas[index] as HTMLElement).style.height;
                 (canvas[index + 1] as HTMLElement).id = (canvas[index] as HTMLElement).id;
-                (canvas[index + 1] as HTMLElement).style.backgroundColor = (canvas[index] as HTMLElement).style.backgroundColor;
                 (canvas[index] as HTMLElement).id = plusOneId;
                 (canvas[index] as HTMLElement).style.height = plusOneHeight;
-                (canvas[index] as HTMLElement).style.backgroundColor = plusOneColor;
                 lastLocation = index+1;
             } else {
                 lastLocation = index;
             }
         }
-        (canvas[numOfPairs] as HTMLElement).style.backgroundColor = "#00ff00";
         await delay(5);
     }
     dataSet = localDataSet;
