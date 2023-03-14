@@ -20,16 +20,18 @@ var AlgoType;
 /**An Enum Representative of our Searching Algorithms. */
 var Algos;
 (function (Algos) {
+    /**Represents the Linear Search Algorithm. */
+    Algos[Algos["LINEAR_SEARCH"] = 0] = "LINEAR_SEARCH";
     /**Represents the Binary Search Algorithm. */
-    Algos[Algos["BINARY_SEARCH"] = 0] = "BINARY_SEARCH";
+    Algos[Algos["BINARY_SEARCH"] = 1] = "BINARY_SEARCH";
     /**Represents the Fibonacci Search Algorithm. */
-    Algos[Algos["FIBONACCI_SEARCH"] = 1] = "FIBONACCI_SEARCH";
+    Algos[Algos["FIBONACCI_SEARCH"] = 2] = "FIBONACCI_SEARCH";
     /**Represents the Insertion Sort Algorithm. */
-    Algos[Algos["INSERTION_SORT"] = 2] = "INSERTION_SORT";
+    Algos[Algos["INSERTION_SORT"] = 3] = "INSERTION_SORT";
     /**Represents the Bubble Sort Algorithm. */
-    Algos[Algos["BUBBLE_SORT"] = 3] = "BUBBLE_SORT";
+    Algos[Algos["BUBBLE_SORT"] = 4] = "BUBBLE_SORT";
     /**Represents the Cocktail Sort Algorithm. */
-    Algos[Algos["COCKTAIL_SORT"] = 4] = "COCKTAIL_SORT";
+    Algos[Algos["COCKTAIL_SORT"] = 5] = "COCKTAIL_SORT";
 })(Algos || (Algos = {}));
 /** An Enum representative of the three different data orders. */
 var DataMode;
@@ -206,6 +208,9 @@ function updateActiveAlgorithm() {
                 case "fibonacci":
                     ACTIVE_ALGORITHM = Algos.FIBONACCI_SEARCH;
                     break;
+                case "linear":
+                    ACTIVE_ALGORITHM = Algos.LINEAR_SEARCH;
+                    break;
             }
         }
     });
@@ -358,12 +363,13 @@ function disableHoverMode() {
     });
 }
 /**
- * Function to set the entire display to a color in RGB format (clamped to 0-255, inclusive, for all values).
+ * Function to get a string color from an RGB format (clamped
+ * to 0-255, inclusive, for all values).
  * @param r The r value of the color.
  * @param g The g value of the color.
  * @param b The b value of the color.
  */
-function setDatemRGB(r, g, b) {
+function colorFromRGB(r, g, b) {
     r = r >= 0 ? (r <= 255 ? r : 255) : 0;
     g = g >= 0 ? (g <= 255 ? g : 255) : 0;
     b = b >= 0 ? (b <= 255 ? b : 255) : 0;
@@ -374,35 +380,64 @@ function setDatemRGB(r, g, b) {
     RGBString[1] = RGBString[1].length == 1 ? "0" + RGBString[1] : RGBString[1];
     RGBString[2] = b.toString(16);
     RGBString[2] = RGBString[2].length == 1 ? "0" + RGBString[2] : RGBString[2];
-    let color = "#" + RGBString[0] + RGBString[1] + RGBString[2];
-    setDatemColor(color);
+    return "#" + RGBString[0] + RGBString[1] + RGBString[2];
 }
 /**
- * Function to set the entire display to a color useing a string Color
+ * Function to set the entire display to a color useing a string Color.
  * @param color A color formatted as #XX00XX or a named color.
  */
 function setDatemColor(color) {
-    Array.from(document.getElementById("dataDisplay").children).forEach((el) => {
-        el.style.backgroundColor = color;
-    });
+    setDatemRangeColor(color);
+}
+/**
+ * Function to set all datem in a range to a string Color.
+ * @param color A color formatted as #XX00XX or a named color.
+ * @param start Inclusive lower bound of the range, 0 by default.
+ * @param end Inclusive upper bound of the range, the size of the data - 1 by default.
+ */
+function setDatemRangeColor(color, start = 0, end = dataSet.length - 1) {
+    let canvas = document.getElementById("dataDisplay").children;
+    for (let i = start; i <= end; i++) {
+        canvas[i].style.backgroundColor = color;
+    }
 }
 function runAlgorithm() {
     return __awaiter(this, void 0, void 0, function* () {
         disableHoverMode();
         ALGO_RUNNING = true;
         switch (ACTIVE_ALGORITHM) {
+            case Algos.LINEAR_SEARCH:
+                break;
             case Algos.BINARY_SEARCH:
+                if (!(dataMode == DataMode.ASCENDING)) {
+                    alert("You cannot run this algorithm on unsorted data.");
+                }
                 break;
             case Algos.FIBONACCI_SEARCH:
                 break;
             case Algos.INSERTION_SORT:
-                yield insertionSort();
+                if (dataMode == DataMode.ASCENDING) {
+                    alert("This data is already sorted.");
+                }
+                else {
+                    yield insertionSort();
+                }
                 break;
             case Algos.BUBBLE_SORT:
-                yield bubbleSort();
+                if (dataMode == DataMode.ASCENDING) {
+                    alert("This data is already sorted.");
+                }
+                else {
+                    yield bubbleSort();
+                }
                 break;
             case Algos.COCKTAIL_SORT:
-                yield cocktailSort();
+                if (dataMode == DataMode.ASCENDING) {
+                    alert("This data is already sorted.");
+                }
+                else {
+                    yield cocktailSort();
+                }
                 break;
         }
         setDatemColor("gray");
@@ -422,8 +457,6 @@ function insertionSort() {
             let elId = canvas[i].id;
             let preI = i - 1; //We're going to start checking the guy before us.
             while (preI >= 0 && localDataSet[preI] > element) { //Until we hit the bottom of the list
-                // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
-                // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
                 localDataSet[preI + 1] = localDataSet[preI];
                 canvas[preI + 1].style.height = canvas[preI].style.height;
                 canvas[preI + 1].id = canvas[preI].id;
@@ -489,7 +522,6 @@ function cocktailSort() {
                     canvas[i - 1].style.height = canvas[i].style.height;
                     canvas[i].style.height = preIHeight;
                     canvas[i].id = preIiD;
-                    // await delay(1);
                 }
             }
             yield delay(1);
@@ -506,7 +538,6 @@ function cocktailSort() {
                     canvas[i + 1].id = canvas[i].id;
                     canvas[i].style.height = postIHeight;
                     canvas[i].id = postIiD;
-                    // await delay(1);
                 }
             }
             yield delay(1);
@@ -515,5 +546,18 @@ function cocktailSort() {
                 break;
         }
         dataSet = localDataSet;
+    });
+}
+function linearSearch() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
+    });
+}
+/** Function to execute binary search. */
+function binarySearch() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
     });
 }
