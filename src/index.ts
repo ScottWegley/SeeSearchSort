@@ -425,13 +425,13 @@ async function insertionSort(): Promise<void> {
         let elId = (canvas[index] as HTMLElement).id;
         let location = index - 1; //We're going to start checking the guy before us.
         while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
-            (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
-            (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
+            // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
+            // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
             localDataSet[location + 1] = localDataSet[location];
             (canvas[location + 1] as HTMLElement).style.height = (canvas[location] as HTMLElement).style.height;
             (canvas[location + 1] as HTMLElement).id = (canvas[location] as HTMLElement).id;
             location--;
-            await delay(1); //Remove this delay for excessively fast sort.
+            // await delay(1); //Remove this delay for excessively fast sort.
         }
         await delay(1);
         localDataSet[location + 1] = element;
@@ -443,7 +443,6 @@ async function insertionSort(): Promise<void> {
 
 /** Function to execute bubble sort. */
 async function bubbleSort(): Promise<void> {
-    console.log("bubbled");
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
     let numOfPairs: number = localDataSet.length;
@@ -467,7 +466,7 @@ async function bubbleSort(): Promise<void> {
                 lastLocation = index;
             }
         }
-        await delay(5);
+        await delay(1);
     }
     dataSet = localDataSet;
 }
