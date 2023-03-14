@@ -371,7 +371,7 @@ function disableHoverMode(): void {
  * @param g The g value of the color.
  * @param b The b value of the color.
  */
-function colorFromRGB(r: Number, g: Number, b: Number):string {
+function colorFromRGB(r: Number, g: Number, b: Number): string {
     r = r >= 0 ? (r <= 255 ? r : 255) : 0;
     g = g >= 0 ? (g <= 255 ? g : 255) : 0;
     b = b >= 0 ? (b <= 255 ? b : 255) : 0;
@@ -411,11 +411,13 @@ async function runAlgorithm(): Promise<void> {
     ALGO_RUNNING = true;
     switch (ACTIVE_ALGORITHM) {
         case Algos.LINEAR_SEARCH:
-
+            await linearSearch();
             break;
         case Algos.BINARY_SEARCH:
             if (!(dataMode == DataMode.ASCENDING)) {
                 alert("You cannot run this algorithm on unsorted data.");
+            } else {
+
             }
             break;
         case Algos.FIBONACCI_SEARCH:
@@ -443,7 +445,6 @@ async function runAlgorithm(): Promise<void> {
             break;
 
     }
-    setDatemColor("gray");
     currentlySorted = true;
     ALGO_RUNNING = false;
     allowHover = true;
@@ -546,11 +547,21 @@ async function cocktailSort(): Promise<void> {
     dataSet = localDataSet;
 }
 
-
+/** Function to execute linear search. */
 async function linearSearch(): Promise<void> {
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
-    
+    let searchKey = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
+    for (let i = 0; i < localDataSet.length; i++) {
+        if (localDataSet[i] == searchKey) {
+            (canvas[i] as HTMLElement).style.backgroundColor = "#00ff00";
+            return;
+        } else {
+            (canvas[i] as HTMLElement).style.backgroundColor = "red";
+        }
+        await delay(1);
+    }
+    return;
 }
 
 /** Function to execute binary search. */
