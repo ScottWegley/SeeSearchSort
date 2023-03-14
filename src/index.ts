@@ -381,13 +381,24 @@ function setDatemRGB(r: Number, g: Number, b: Number) {
 }
 
 /**
- * Function to set the entire display to a color useing a string Color
+ * Function to set the entire display to a color useing a string Color.
  * @param color A color formatted as #XX00XX or a named color.
  */
 function setDatemColor(color: string) {
-    Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children).forEach((el) => {
-        (el as HTMLElement).style.backgroundColor = color;
-    });
+    setDatemRangeColor(color);
+}
+
+/**
+ * Function to set all datem in a range to a string Color.
+ * @param color A color formatted as #XX00XX or a named color.
+ * @param start Inclusive lower bound of the range, 0 by default.
+ * @param end Inclusive upper bound of the range, the size of the data - 1 by default.
+ */
+function setDatemRangeColor(color:string, start:number = 0, end:number = dataSet.length - 1){
+    let canvas = (document.getElementById("dataDisplay") as HTMLDivElement).children;
+    for (let i = start; i <= end; i++) {
+        (canvas[i] as HTMLElement).style.backgroundColor = color;        
+    }
 }
 
 async function runAlgorithm(): Promise<void> {
@@ -513,4 +524,9 @@ async function cocktailSort(): Promise<void> {
         if (lower == upper) break;
     }
     dataSet = localDataSet;
+}
+
+async function binarySearch(): Promise<void> {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
 }
