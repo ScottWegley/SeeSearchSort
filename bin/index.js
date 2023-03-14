@@ -421,13 +421,13 @@ function insertionSort() {
             let elId = canvas[index].id;
             let location = index - 1; //We're going to start checking the guy before us.
             while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
-                canvas[location + 1].style.backgroundColor = "#00ff00";
-                canvas[location].style.backgroundColor = "#00ff00";
+                // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
+                // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
                 localDataSet[location + 1] = localDataSet[location];
                 canvas[location + 1].style.height = canvas[location].style.height;
                 canvas[location + 1].id = canvas[location].id;
                 location--;
-                yield delay(1); //Remove this delay for excessively fast sort.
+                // await delay(1); //Remove this delay for excessively fast sort.
             }
             yield delay(1);
             localDataSet[location + 1] = element;
@@ -440,7 +440,6 @@ function insertionSort() {
 /** Function to execute bubble sort. */
 function bubbleSort() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("bubbled");
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
         let numOfPairs = localDataSet.length;
@@ -455,21 +454,17 @@ function bubbleSort() {
                     swapped = true;
                     let plusOneHeight = canvas[index + 1].style.height;
                     let plusOneId = canvas[index + 1].id;
-                    let plusOneColor = canvas[index + 1].style.backgroundColor;
                     canvas[index + 1].style.height = canvas[index].style.height;
                     canvas[index + 1].id = canvas[index].id;
-                    canvas[index + 1].style.backgroundColor = canvas[index].style.backgroundColor;
                     canvas[index].id = plusOneId;
                     canvas[index].style.height = plusOneHeight;
-                    canvas[index].style.backgroundColor = plusOneColor;
                     lastLocation = index + 1;
                 }
                 else {
                     lastLocation = index;
                 }
             }
-            canvas[numOfPairs].style.backgroundColor = "#00ff00";
-            yield delay(5);
+            yield delay(1);
         }
         dataSet = localDataSet;
     });
