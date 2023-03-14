@@ -406,6 +406,7 @@ async function runAlgorithm(): Promise<void> {
             await bubbleSort();
             break;
         case Algos.COCKTAIL_SORT:
+            await cocktailSort();
             break;
 
     }
@@ -469,4 +470,36 @@ async function bubbleSort(): Promise<void> {
         await delay(1);
     }
     dataSet = localDataSet;
+}
+
+/** Function to execute cocktail sort. */
+async function cocktailSort(): Promise<void> {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
+    let lower = 0;
+    let upper = localDataSet.length - 1;
+
+    while(true) {
+        let lastSwap = upper;
+        for (let i = upper; i > lower; i--) {
+            if(localDataSet[i] < localDataSet[i-1]){
+                [localDataSet[i-1],localDataSet[i]] = [localDataSet[i],localDataSet[i-1]];
+                lastSwap = i;
+            }
+        }
+        lower = lastSwap;
+        if(lower == upper) break;
+        for (let i = lower; i < upper; i++) {
+            if(localDataSet[i] > localDataSet[i+1]){
+                [localDataSet[i+1],localDataSet[i]] = [localDataSet[i],localDataSet[i+1]];
+                lastSwap = i;
+            }
+        }
+        upper = lastSwap;
+        if(lower == upper) break;
+    }
+    dataSet = localDataSet;
+    dataSet.forEach((e) => {
+        console.log(e);
+    })
 }
