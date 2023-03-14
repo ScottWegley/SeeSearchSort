@@ -576,4 +576,19 @@ async function linearSearch(): Promise<void> {
 async function binarySearch(): Promise<void> {
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
+    let searchKey = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
+    let start = 0;
+    let end = localDataSet.length;
+    let middle:number;
+    while(start <= end) {
+        middle = Math.floor((start + end) / 2);
+        if(searchKey > localDataSet[middle]){
+            start = middle + 1;
+        } else if(localDataSet[middle] > searchKey){
+            end = middle - 1;
+        } else {
+            (canvas[middle] as HTMLElement).style.backgroundColor = "#00ff00";
+            return;
+        }
+    }
 }
