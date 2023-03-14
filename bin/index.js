@@ -402,6 +402,7 @@ function runAlgorithm() {
                 yield bubbleSort();
                 break;
             case Algos.COCKTAIL_SORT:
+                yield cocktailSort();
                 break;
         }
         setDatemColor("gray");
@@ -415,24 +416,24 @@ function insertionSort() {
     return __awaiter(this, void 0, void 0, function* () {
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
-        for (let index = 0; index < localDataSet.length; index++) {
-            let element = localDataSet[index]; //We're trying to find a home for this guy.
-            let elHeight = canvas[index].style.height;
-            let elId = canvas[index].id;
-            let location = index - 1; //We're going to start checking the guy before us.
-            while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+        for (let i = 0; i < localDataSet.length; i++) {
+            let element = localDataSet[i]; //We're trying to find a home for this guy.
+            let elHeight = canvas[i].style.height;
+            let elId = canvas[i].id;
+            let preI = i - 1; //We're going to start checking the guy before us.
+            while (preI >= 0 && localDataSet[preI] > element) { //Until we hit the bottom of the list
                 // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
                 // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
-                localDataSet[location + 1] = localDataSet[location];
-                canvas[location + 1].style.height = canvas[location].style.height;
-                canvas[location + 1].id = canvas[location].id;
-                location--;
+                localDataSet[preI + 1] = localDataSet[preI];
+                canvas[preI + 1].style.height = canvas[preI].style.height;
+                canvas[preI + 1].id = canvas[preI].id;
+                preI--;
                 // await delay(1); //Remove this delay for excessively fast sort.
             }
             yield delay(1);
-            localDataSet[location + 1] = element;
-            canvas[location + 1].style.height = elHeight;
-            canvas[location + 1].id = elId;
+            localDataSet[preI + 1] = element;
+            canvas[preI + 1].style.height = elHeight;
+            canvas[preI + 1].id = elId;
         }
         dataSet = localDataSet;
     });
@@ -448,23 +449,70 @@ function bubbleSort() {
             numOfPairs--;
             let lastLocation = -1;
             swapped = false;
-            for (let index = 0; index < numOfPairs; index++) {
-                if (localDataSet[index] > localDataSet[index + 1]) {
-                    [localDataSet[index], localDataSet[index + 1]] = [localDataSet[index + 1], localDataSet[index]];
+            for (let i = 0; i < numOfPairs; i++) {
+                if (localDataSet[i] > localDataSet[i + 1]) {
+                    [localDataSet[i], localDataSet[i + 1]] = [localDataSet[i + 1], localDataSet[i]];
                     swapped = true;
-                    let plusOneHeight = canvas[index + 1].style.height;
-                    let plusOneId = canvas[index + 1].id;
-                    canvas[index + 1].style.height = canvas[index].style.height;
-                    canvas[index + 1].id = canvas[index].id;
-                    canvas[index].id = plusOneId;
-                    canvas[index].style.height = plusOneHeight;
-                    lastLocation = index + 1;
+                    let plusOneHeight = canvas[i + 1].style.height;
+                    let plusOneId = canvas[i + 1].id;
+                    canvas[i + 1].style.height = canvas[i].style.height;
+                    canvas[i + 1].id = canvas[i].id;
+                    canvas[i].id = plusOneId;
+                    canvas[i].style.height = plusOneHeight;
+                    lastLocation = i + 1;
                 }
                 else {
-                    lastLocation = index;
+                    lastLocation = i;
                 }
             }
             yield delay(1);
+        }
+        dataSet = localDataSet;
+    });
+}
+/** Function to execute cocktail sort. */
+function cocktailSort() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
+        let lower = 0;
+        let upper = localDataSet.length - 1;
+        while (true) {
+            let lastSwap = upper;
+            for (let i = upper; i > lower; i--) {
+                if (localDataSet[i] < localDataSet[i - 1]) {
+                    [localDataSet[i - 1], localDataSet[i]] = [localDataSet[i], localDataSet[i - 1]];
+                    lastSwap = i;
+                    let preIHeight = canvas[i - 1].style.height;
+                    let preIiD = canvas[i - 1].id;
+                    canvas[i - 1].id = canvas[i].id;
+                    canvas[i - 1].style.height = canvas[i].style.height;
+                    canvas[i].style.height = preIHeight;
+                    canvas[i].id = preIiD;
+                    // await delay(1);
+                }
+            }
+            yield delay(1);
+            lower = lastSwap;
+            if (lower == upper)
+                break;
+            for (let i = lower; i < upper; i++) {
+                if (localDataSet[i] > localDataSet[i + 1]) {
+                    [localDataSet[i + 1], localDataSet[i]] = [localDataSet[i], localDataSet[i + 1]];
+                    lastSwap = i;
+                    let postIHeight = canvas[i + 1].style.height;
+                    let postIiD = canvas[i + 1].id;
+                    canvas[i + 1].style.height = canvas[i].style.height;
+                    canvas[i + 1].id = canvas[i].id;
+                    canvas[i].style.height = postIHeight;
+                    canvas[i].id = postIiD;
+                    // await delay(1);
+                }
+            }
+            yield delay(1);
+            upper = lastSwap;
+            if (lower == upper)
+                break;
         }
         dataSet = localDataSet;
     });

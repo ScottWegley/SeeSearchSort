@@ -450,7 +450,7 @@ async function bubbleSort(): Promise<void> {
     let swapped: boolean = true;
     while (swapped) {
         numOfPairs--;
-        let lastLocation:number = -1;
+        let lastLocation: number = -1;
         swapped = false;
         for (let i = 0; i < numOfPairs; i++) {
             if (localDataSet[i] > localDataSet[i + 1]) {
@@ -462,7 +462,7 @@ async function bubbleSort(): Promise<void> {
                 (canvas[i + 1] as HTMLElement).id = (canvas[i] as HTMLElement).id;
                 (canvas[i] as HTMLElement).id = plusOneId;
                 (canvas[i] as HTMLElement).style.height = plusOneHeight;
-                lastLocation = i+1;
+                lastLocation = i + 1;
             } else {
                 lastLocation = i;
             }
@@ -479,25 +479,38 @@ async function cocktailSort(): Promise<void> {
     let lower = 0;
     let upper = localDataSet.length - 1;
 
-    while(true) {
+    while (true) {
         let lastSwap = upper;
         for (let i = upper; i > lower; i--) {
-            if(localDataSet[i] < localDataSet[i-1]){
-                [localDataSet[i-1],localDataSet[i]] = [localDataSet[i],localDataSet[i-1]];
+            if (localDataSet[i] < localDataSet[i - 1]) {
+                [localDataSet[i - 1], localDataSet[i]] = [localDataSet[i], localDataSet[i - 1]];
                 lastSwap = i;
-                (canvas[i-1])
+                let preIHeight = (canvas[i - 1] as HTMLElement).style.height;
+                let preIiD = (canvas[i - 1] as HTMLElement).id;
+                (canvas[i - 1] as HTMLElement).id = (canvas[i] as HTMLElement).id;
+                (canvas[i - 1] as HTMLElement).style.height = (canvas[i] as HTMLElement).style.height;
+                (canvas[i] as HTMLElement).style.height = preIHeight;
+                (canvas[i] as HTMLElement).id = preIiD;
             }
         }
+        await delay(1);
         lower = lastSwap;
-        if(lower == upper) break;
+        if (lower == upper) break;
         for (let i = lower; i < upper; i++) {
-            if(localDataSet[i] > localDataSet[i+1]){
-                [localDataSet[i+1],localDataSet[i]] = [localDataSet[i],localDataSet[i+1]];
+            if (localDataSet[i] > localDataSet[i + 1]) {
+                [localDataSet[i + 1], localDataSet[i]] = [localDataSet[i], localDataSet[i + 1]];
                 lastSwap = i;
+                let postIHeight = (canvas[i + 1] as HTMLElement).style.height;
+                let postIiD = (canvas[i + 1] as HTMLElement).id;
+                (canvas[i + 1] as HTMLElement).style.height = (canvas[i] as HTMLElement).style.height;
+                (canvas[i + 1] as HTMLElement).id = (canvas[i] as HTMLElement).id;
+                (canvas[i] as HTMLElement).style.height = postIHeight;
+                (canvas[i] as HTMLElement).id = postIiD;
             }
         }
+        await delay(1);
         upper = lastSwap;
-        if(lower == upper) break;
+        if (lower == upper) break;
     }
     dataSet = localDataSet;
 }
