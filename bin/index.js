@@ -171,6 +171,14 @@ function injectScripts() {
         }
         runAlgorithm();
     });
+    //Reset the color of the data on button press.
+    document.getElementById("btnClr").addEventListener("click", (ev) => {
+        if (ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
+        setDatemColor("gray");
+    });
 }
 /**
  * Adds bounds of the search key of 1 (inclusive) and {@link getMaxDataSize()} (inclusive).
@@ -407,10 +415,13 @@ function runAlgorithm() {
         ALGO_RUNNING = true;
         switch (ACTIVE_ALGORITHM) {
             case Algos.LINEAR_SEARCH:
+                yield linearSearch();
                 break;
             case Algos.BINARY_SEARCH:
                 if (!(dataMode == DataMode.ASCENDING)) {
                     alert("You cannot run this algorithm on unsorted data.");
+                }
+                else {
                 }
                 break;
             case Algos.FIBONACCI_SEARCH:
@@ -440,7 +451,6 @@ function runAlgorithm() {
                 }
                 break;
         }
-        setDatemColor("gray");
         currentlySorted = true;
         ALGO_RUNNING = false;
         allowHover = true;
@@ -548,10 +558,23 @@ function cocktailSort() {
         dataSet = localDataSet;
     });
 }
+/** Function to execute linear search. */
 function linearSearch() {
     return __awaiter(this, void 0, void 0, function* () {
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
+        let searchKey = document.getElementById("searchKey").valueAsNumber;
+        for (let i = 0; i < localDataSet.length; i++) {
+            if (localDataSet[i] == searchKey) {
+                canvas[i].style.backgroundColor = "#00ff00";
+                return;
+            }
+            else {
+                canvas[i].style.backgroundColor = "red";
+            }
+            yield delay(1);
+        }
+        return;
     });
 }
 /** Function to execute binary search. */
@@ -559,5 +582,22 @@ function binarySearch() {
     return __awaiter(this, void 0, void 0, function* () {
         let canvas = Array.from(document.getElementById("dataDisplay").children);
         let localDataSet = Array.from(dataSet);
+        let searchKey = document.getElementById("searchKey").valueAsNumber;
+        let start = 0;
+        let end = localDataSet.length;
+        let middle;
+        while (start <= end) {
+            middle = Math.floor((start + end) / 2);
+            if (searchKey > localDataSet[middle]) {
+                start = middle + 1;
+            }
+            else if (localDataSet[middle] > searchKey) {
+                end = middle - 1;
+            }
+            else {
+                canvas[middle].style.backgroundColor = "#00ff00";
+                return;
+            }
+        }
     });
 }
