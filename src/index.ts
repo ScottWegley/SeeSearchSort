@@ -164,6 +164,14 @@ function injectScripts(): void {
         }
         runAlgorithm();
     });
+    //Reset the color of the data on button press.
+    (document.getElementById("btnClr") as HTMLButtonElement).addEventListener("click", (ev) => {
+        if(ALGO_RUNNING) {
+            ev.preventDefault();
+            return;
+        }
+        setDatemColor("gray");
+    });
 }
 
 /**
