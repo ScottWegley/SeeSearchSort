@@ -394,10 +394,10 @@ function setDatemColor(color: string) {
  * @param start Inclusive lower bound of the range, 0 by default.
  * @param end Inclusive upper bound of the range, the size of the data - 1 by default.
  */
-function setDatemRangeColor(color:string, start:number = 0, end:number = dataSet.length - 1){
+function setDatemRangeColor(color: string, start: number = 0, end: number = dataSet.length - 1) {
     let canvas = (document.getElementById("dataDisplay") as HTMLDivElement).children;
     for (let i = start; i <= end; i++) {
-        (canvas[i] as HTMLElement).style.backgroundColor = color;        
+        (canvas[i] as HTMLElement).style.backgroundColor = color;
     }
 }
 
@@ -406,18 +406,32 @@ async function runAlgorithm(): Promise<void> {
     ALGO_RUNNING = true;
     switch (ACTIVE_ALGORITHM) {
         case Algos.BINARY_SEARCH:
-
+            if (!(dataMode == DataMode.ASCENDING)) {
+                alert("You cannot run this algorithm on unsorted data.");
+            }
             break;
         case Algos.FIBONACCI_SEARCH:
             break;
         case Algos.INSERTION_SORT:
-            await insertionSort();
+            if (dataMode == DataMode.ASCENDING) {
+                alert("This data is already sorted.");
+            } else {
+                await insertionSort();
+            }
             break;
         case Algos.BUBBLE_SORT:
-            await bubbleSort();
+            if (dataMode == DataMode.ASCENDING) {
+                alert("This data is already sorted.");
+            } else {
+                await bubbleSort();
+            }
             break;
         case Algos.COCKTAIL_SORT:
-            await cocktailSort();
+            if (dataMode == DataMode.ASCENDING) {
+                alert("This data is already sorted.");
+            } else {
+                await cocktailSort();
+            }
             break;
 
     }
