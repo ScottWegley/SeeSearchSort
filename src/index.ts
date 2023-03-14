@@ -420,24 +420,24 @@ async function runAlgorithm(): Promise<void> {
 async function insertionSort(): Promise<void> {
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
-    for (let index = 0; index < localDataSet.length; index++) {
-        let element = localDataSet[index]; //We're trying to find a home for this guy.
-        let elHeight = (canvas[index] as HTMLElement).style.height;
-        let elId = (canvas[index] as HTMLElement).id;
-        let location = index - 1; //We're going to start checking the guy before us.
-        while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
+    for (let i = 0; i < localDataSet.length; i++) {
+        let element = localDataSet[i]; //We're trying to find a home for this guy.
+        let elHeight = (canvas[i] as HTMLElement).style.height;
+        let elId = (canvas[i] as HTMLElement).id;
+        let preI = i - 1; //We're going to start checking the guy before us.
+        while (preI >= 0 && localDataSet[preI] > element) { //Until we hit the bottom of the list
             // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
             // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
-            localDataSet[location + 1] = localDataSet[location];
-            (canvas[location + 1] as HTMLElement).style.height = (canvas[location] as HTMLElement).style.height;
-            (canvas[location + 1] as HTMLElement).id = (canvas[location] as HTMLElement).id;
-            location--;
+            localDataSet[preI + 1] = localDataSet[preI];
+            (canvas[preI + 1] as HTMLElement).style.height = (canvas[preI] as HTMLElement).style.height;
+            (canvas[preI + 1] as HTMLElement).id = (canvas[preI] as HTMLElement).id;
+            preI--;
             // await delay(1); //Remove this delay for excessively fast sort.
         }
         await delay(1);
-        localDataSet[location + 1] = element;
-        (canvas[location + 1] as HTMLElement).style.height = elHeight;
-        (canvas[location + 1] as HTMLElement).id = elId;
+        localDataSet[preI + 1] = element;
+        (canvas[preI + 1] as HTMLElement).style.height = elHeight;
+        (canvas[preI + 1] as HTMLElement).id = elId;
     }
     dataSet = localDataSet;
 }
@@ -452,19 +452,19 @@ async function bubbleSort(): Promise<void> {
         numOfPairs--;
         let lastLocation:number = -1;
         swapped = false;
-        for (let index = 0; index < numOfPairs; index++) {
-            if (localDataSet[index] > localDataSet[index + 1]) {
-                [localDataSet[index], localDataSet[index + 1]] = [localDataSet[index + 1], localDataSet[index]];
+        for (let i = 0; i < numOfPairs; i++) {
+            if (localDataSet[i] > localDataSet[i + 1]) {
+                [localDataSet[i], localDataSet[i + 1]] = [localDataSet[i + 1], localDataSet[i]];
                 swapped = true;
-                let plusOneHeight = (canvas[index + 1] as HTMLElement).style.height;
-                let plusOneId = (canvas[index + 1] as HTMLElement).id;
-                (canvas[index + 1] as HTMLElement).style.height = (canvas[index] as HTMLElement).style.height;
-                (canvas[index + 1] as HTMLElement).id = (canvas[index] as HTMLElement).id;
-                (canvas[index] as HTMLElement).id = plusOneId;
-                (canvas[index] as HTMLElement).style.height = plusOneHeight;
-                lastLocation = index+1;
+                let plusOneHeight = (canvas[i + 1] as HTMLElement).style.height;
+                let plusOneId = (canvas[i + 1] as HTMLElement).id;
+                (canvas[i + 1] as HTMLElement).style.height = (canvas[i] as HTMLElement).style.height;
+                (canvas[i + 1] as HTMLElement).id = (canvas[i] as HTMLElement).id;
+                (canvas[i] as HTMLElement).id = plusOneId;
+                (canvas[i] as HTMLElement).style.height = plusOneHeight;
+                lastLocation = i+1;
             } else {
-                lastLocation = index;
+                lastLocation = i;
             }
         }
         await delay(1);
@@ -485,6 +485,7 @@ async function cocktailSort(): Promise<void> {
             if(localDataSet[i] < localDataSet[i-1]){
                 [localDataSet[i-1],localDataSet[i]] = [localDataSet[i],localDataSet[i-1]];
                 lastSwap = i;
+                (canvas[i-1])
             }
         }
         lower = lastSwap;
@@ -499,7 +500,4 @@ async function cocktailSort(): Promise<void> {
         if(lower == upper) break;
     }
     dataSet = localDataSet;
-    dataSet.forEach((e) => {
-        console.log(e);
-    })
 }
