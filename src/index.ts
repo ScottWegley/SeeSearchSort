@@ -37,7 +37,7 @@ let barWidthPx: Number = 9.5;
 /** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
 let currentAlgos: AlgoType = AlgoType.SORTING_ALGORITHMS;
 /** Represents the current selected algorithm. */
-let ACTIVE_ALGORITHM: Algos;
+let ACTIVE_ALGORITHM: Algos = Algos.INSERTION_SORT;
 /** Internal record of our data values */
 let dataSet: Array<Number> = new Array<Number>(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
@@ -65,6 +65,7 @@ window.addEventListener('load', () => {
     (document.getElementById("sortRadio") as HTMLInputElement).checked = true;
     (document.getElementById("maxSize") as HTMLInputElement).checked = true;
     (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber = 1;
+    (document.getElementById("insertion") as HTMLInputElement).checked = true;
     prevWidth = window.innerWidth;
     switchAvailabeAlgos();
     injectScripts();
@@ -394,7 +395,7 @@ async function runAlgorithm(): Promise<void> {
     ALGO_RUNNING = true;
     switch (ACTIVE_ALGORITHM) {
         case Algos.BINARY_SEARCH:
-            
+
             break;
         case Algos.FIBONACCI_SEARCH:
             break;
@@ -402,10 +403,11 @@ async function runAlgorithm(): Promise<void> {
             await insertionSort();
             break;
         case Algos.BUBBLE_SORT:
+            await bubbleSort();
             break;
         case Algos.COCKTAIL_SORT:
             break;
-        
+
     }
     setDatemColor("gray");
     currentlySorted = true;
@@ -423,18 +425,48 @@ async function insertionSort(): Promise<void> {
         let elId = (canvas[index] as HTMLElement).id;
         let location = index - 1; //We're going to start checking the guy before us.
         while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
-            (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
-            (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
+            // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
+            // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
             localDataSet[location + 1] = localDataSet[location];
             (canvas[location + 1] as HTMLElement).style.height = (canvas[location] as HTMLElement).style.height;
             (canvas[location + 1] as HTMLElement).id = (canvas[location] as HTMLElement).id;
-            await delay(1);
             location--;
+            // await delay(1); //Remove this delay for excessively fast sort.
         }
         await delay(1);
         localDataSet[location + 1] = element;
         (canvas[location + 1] as HTMLElement).style.height = elHeight;
         (canvas[location + 1] as HTMLElement).id = elId;
+    }
+    dataSet = localDataSet;
+}
+
+/** Function to execute bubble sort. */
+async function bubbleSort(): Promise<void> {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
+    let numOfPairs: number = localDataSet.length;
+    let swapped: boolean = true;
+    while (swapped) {
+        numOfPairs--;
+        let lastLocation:number = -1;
+        swapped = false;
+        for (let index = 0; index < numOfPairs; index++) {
+            if (localDataSet[index] > localDataSet[index + 1]) {
+                [localDataSet[index], localDataSet[index + 1]] = [localDataSet[index + 1], localDataSet[index]];
+                swapped = true;
+                let plusOneHeight = (canvas[index + 1] as HTMLElement).style.height;
+                let plusOneId = (canvas[index + 1] as HTMLElement).id;
+                (canvas[index + 1] as HTMLElement).style.height = (canvas[index] as HTMLElement).style.height;
+                (canvas[index + 1] as HTMLElement).id = (canvas[index] as HTMLElement).id;
+                (canvas[index] as HTMLElement).id = plusOneId;
+                (canvas[index] as HTMLElement).style.height = plusOneHeight;
+                lastLocation = index+1;
+            } else {
+                lastLocation = index;
+            }
+        }
+        await delay(1);
     }
     dataSet = localDataSet;
 }

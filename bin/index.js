@@ -46,7 +46,7 @@ let barWidthPx = 9.5;
 /** Stores the current type of algorithms available.  Initalized as {@link AlgoType.SORTING_ALGORITHMS}*/
 let currentAlgos = AlgoType.SORTING_ALGORITHMS;
 /** Represents the current selected algorithm. */
-let ACTIVE_ALGORITHM;
+let ACTIVE_ALGORITHM = Algos.INSERTION_SORT;
 /** Internal record of our data values */
 let dataSet = new Array(0);
 /** Stores the current order of the data.  Initialized as {@link DataMode.ASCENDING} */
@@ -73,6 +73,7 @@ window.addEventListener('load', () => {
     document.getElementById("sortRadio").checked = true;
     document.getElementById("maxSize").checked = true;
     document.getElementById("searchKey").valueAsNumber = 1;
+    document.getElementById("insertion").checked = true;
     prevWidth = window.innerWidth;
     switchAvailabeAlgos();
     injectScripts();
@@ -398,6 +399,7 @@ function runAlgorithm() {
                 yield insertionSort();
                 break;
             case Algos.BUBBLE_SORT:
+                yield bubbleSort();
                 break;
             case Algos.COCKTAIL_SORT:
                 break;
@@ -419,18 +421,50 @@ function insertionSort() {
             let elId = canvas[index].id;
             let location = index - 1; //We're going to start checking the guy before us.
             while (location >= 0 && localDataSet[location] > element) { //Until we hit the bottom of the list
-                canvas[location + 1].style.backgroundColor = "#00ff00";
-                canvas[location].style.backgroundColor = "#00ff00";
+                // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
+                // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
                 localDataSet[location + 1] = localDataSet[location];
                 canvas[location + 1].style.height = canvas[location].style.height;
                 canvas[location + 1].id = canvas[location].id;
-                yield delay(1);
                 location--;
+                // await delay(1); //Remove this delay for excessively fast sort.
             }
             yield delay(1);
             localDataSet[location + 1] = element;
             canvas[location + 1].style.height = elHeight;
             canvas[location + 1].id = elId;
+        }
+        dataSet = localDataSet;
+    });
+}
+/** Function to execute bubble sort. */
+function bubbleSort() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
+        let numOfPairs = localDataSet.length;
+        let swapped = true;
+        while (swapped) {
+            numOfPairs--;
+            let lastLocation = -1;
+            swapped = false;
+            for (let index = 0; index < numOfPairs; index++) {
+                if (localDataSet[index] > localDataSet[index + 1]) {
+                    [localDataSet[index], localDataSet[index + 1]] = [localDataSet[index + 1], localDataSet[index]];
+                    swapped = true;
+                    let plusOneHeight = canvas[index + 1].style.height;
+                    let plusOneId = canvas[index + 1].id;
+                    canvas[index + 1].style.height = canvas[index].style.height;
+                    canvas[index + 1].id = canvas[index].id;
+                    canvas[index].id = plusOneId;
+                    canvas[index].style.height = plusOneHeight;
+                    lastLocation = index + 1;
+                }
+                else {
+                    lastLocation = index;
+                }
+            }
+            yield delay(1);
         }
         dataSet = localDataSet;
     });
