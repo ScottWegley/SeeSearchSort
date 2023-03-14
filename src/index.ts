@@ -10,6 +10,8 @@ enum AlgoType {
 
 /**An Enum Representative of our Searching Algorithms. */
 enum Algos {
+    /**Represents the Linear Search Algorithm. */
+    LINEAR_SEARCH,
     /**Represents the Binary Search Algorithm. */
     BINARY_SEARCH,
     /**Represents the Fibonacci Search Algorithm. */
@@ -201,6 +203,9 @@ function updateActiveAlgorithm(): void {
                     break;
                 case "fibonacci":
                     ACTIVE_ALGORITHM = Algos.FIBONACCI_SEARCH;
+                    break;
+                case "linear":
+                    ACTIVE_ALGORITHM = Algos.LINEAR_SEARCH;
                     break;
             }
         }
@@ -405,6 +410,9 @@ async function runAlgorithm(): Promise<void> {
     disableHoverMode();
     ALGO_RUNNING = true;
     switch (ACTIVE_ALGORITHM) {
+        case Algos.LINEAR_SEARCH:
+
+            break;
         case Algos.BINARY_SEARCH:
             if (!(dataMode == DataMode.ASCENDING)) {
                 alert("You cannot run this algorithm on unsorted data.");
@@ -451,8 +459,6 @@ async function insertionSort(): Promise<void> {
         let elId = (canvas[i] as HTMLElement).id;
         let preI = i - 1; //We're going to start checking the guy before us.
         while (preI >= 0 && localDataSet[preI] > element) { //Until we hit the bottom of the list
-            // (canvas[location + 1] as HTMLElement).style.backgroundColor = "#00ff00";
-            // (canvas[location] as HTMLElement).style.backgroundColor = "#00ff00";
             localDataSet[preI + 1] = localDataSet[preI];
             (canvas[preI + 1] as HTMLElement).style.height = (canvas[preI] as HTMLElement).style.height;
             (canvas[preI + 1] as HTMLElement).id = (canvas[preI] as HTMLElement).id;
@@ -540,6 +546,14 @@ async function cocktailSort(): Promise<void> {
     dataSet = localDataSet;
 }
 
+
+async function linearSearch(): Promise<void> {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
+    
+}
+
+/** Function to execute binary search. */
 async function binarySearch(): Promise<void> {
     let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
     let localDataSet: Array<Number> = Array.from(dataSet);
