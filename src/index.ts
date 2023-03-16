@@ -54,6 +54,8 @@ let allowHover: Boolean = true;
 let currentlySorted: Boolean = false;
 /** Stores whether or not an algorithm is current running. */
 let ALGO_RUNNING: Boolean = false;
+/** Stores whether or not the data set current has search coloring. */
+let COLORED:Boolean = false;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -352,6 +354,10 @@ function getMaxDataSize(): Number {
  */
 function handleDatemHover(e: MouseEvent): void {
     if (allowHover) {
+        if(COLORED){
+            COLORED = false;
+            setDatemColor("gray");
+        }
         let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
         if (prevDatem != -1) {
             Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
@@ -420,12 +426,14 @@ async function runAlgorithm(): Promise<void> {
     switch (ACTIVE_ALGORITHM) {
         case Algos.LINEAR_SEARCH:
             await linearSearch();
+            COLORED = true;
             break;
         case Algos.BINARY_SEARCH:
             if (!(dataMode == DataMode.ASCENDING)) {
                 alert("You cannot run this algorithm on unsorted data.");
             } else {
-
+                await binarySearch();
+                COLORED = true;
             }
             break;
         case Algos.FIBONACCI_SEARCH:
