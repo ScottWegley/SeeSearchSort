@@ -168,7 +168,7 @@ function injectScripts(): void {
     });
     //Reset the color of the data on button press.
     (document.getElementById("btnClr") as HTMLButtonElement).addEventListener("click", (ev) => {
-        if(ALGO_RUNNING) {
+        if (ALGO_RUNNING) {
             ev.preventDefault();
             return;
         }
@@ -587,13 +587,25 @@ async function binarySearch(): Promise<void> {
     let searchKey = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
     let start = 0;
     let end = localDataSet.length;
-    let middle:number;
-    while(start <= end) {
+    let middle: number;
+    let prevStart = 0;
+    let prevEnd = localDataSet.length;
+    while (start <= end) {
         middle = Math.floor((start + end) / 2);
-        if(searchKey > localDataSet[middle]){
+        if (searchKey > localDataSet[middle]) {
+            prevStart = start;
             start = middle + 1;
-        } else if(localDataSet[middle] > searchKey){
+            for (let i = prevStart; i < start; i++) {
+                setDatemRangeColor("red", i, i);
+                await delay(1);
+            }
+        } else if (localDataSet[middle] > searchKey) {
+            prevEnd = end;
             end = middle - 1;
+            for (let i = end; i < prevEnd; i++) {
+                setDatemRangeColor("red", i, i);
+                await delay(1);
+            }
         } else {
             (canvas[middle] as HTMLElement).style.backgroundColor = "#00ff00";
             return;
