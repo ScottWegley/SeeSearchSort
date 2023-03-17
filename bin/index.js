@@ -63,6 +63,8 @@ let allowHover = true;
 let currentlySorted = false;
 /** Stores whether or not an algorithm is current running. */
 let ALGO_RUNNING = false;
+/** Stores whether or not the data set current has search coloring. */
+let COLORED = false;
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
  * Force the algorithm radio buttons to update based on the algorithm type. {@link switchAvailabeAlgos()}
@@ -285,8 +287,12 @@ function drawDefaultData() {
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.classList.add("datemDiv");
             toAdd.addEventListener("mouseover", (e) => {
                 handleDatemHover(e);
+            });
+            toAdd.addEventListener("mouseleave", (e) => {
+                handleHoverLeave(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -304,8 +310,12 @@ function drawDefaultData() {
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.classList.add("datemDiv");
             toAdd.addEventListener("mouseover", (e) => {
                 handleDatemHover(e);
+            });
+            toAdd.addEventListener("mouseleave", (e) => {
+                handleHoverLeave(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -351,16 +361,36 @@ function getMaxDataSize() {
 function handleDatemHover(e) {
     var _a;
     if (allowHover) {
+        if (COLORED) {
+            COLORED = false;
+            setDatemColor("gray");
+        }
         let prevDatem = parseInt((((_a = document.getElementById("hoveredDatem").textContent) === null || _a === void 0 ? void 0 : _a.substring(15)) || "-1"));
         if (prevDatem != -1) {
             Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
                 el.style.backgroundColor = "gray";
+                el.classList.remove("currentlyHoveredDatem");
             });
         }
         ;
         e.target.classList.add("currentlyHoveredDatem");
         e.target.style.backgroundColor = "#00ff00";
         document.getElementById("hoveredDatem").textContent = "Hovered Value: " + e.target.id.replace("displayDatem", "");
+    }
+}
+/**
+ * Removes any highlights from data if none is hovered.
+ * @param e
+ */
+function handleHoverLeave(e) {
+    if (allowHover) {
+        if (document.querySelectorAll("div.datemDiv:hover").length == 0) {
+            Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+                el.style.backgroundColor = "gray";
+                el.classList.remove("currentlyHoveredDatem");
+            });
+            document.getElementById("hoveredDatem").textContent = "Hovered Value: ";
+        }
     }
 }
 /** Disables the on hover effexts for datem divs via {@link allowHover}. Removes any active effects. */
@@ -416,12 +446,15 @@ function runAlgorithm() {
         switch (ACTIVE_ALGORITHM) {
             case Algos.LINEAR_SEARCH:
                 yield linearSearch();
+                COLORED = true;
                 break;
             case Algos.BINARY_SEARCH:
                 if (!(dataMode == DataMode.ASCENDING)) {
                     alert("You cannot run this algorithm on unsorted data.");
                 }
                 else {
+                    yield binarySearch();
+                    COLORED = true;
                 }
                 break;
             case Algos.FIBONACCI_SEARCH:
@@ -586,13 +619,25 @@ function binarySearch() {
         let start = 0;
         let end = localDataSet.length;
         let middle;
+        let prevStart = 0;
+        let prevEnd = localDataSet.length;
         while (start <= end) {
             middle = Math.floor((start + end) / 2);
             if (searchKey > localDataSet[middle]) {
+                prevStart = start;
                 start = middle + 1;
+                for (let i = prevStart; i <= start; i++) {
+                    setDatemRangeColor("red", i, i);
+                    yield delay(1);
+                }
             }
             else if (localDataSet[middle] > searchKey) {
+                prevEnd = end;
                 end = middle - 1;
+                for (let i = end; i < prevEnd; i++) {
+                    setDatemRangeColor("red", i, i);
+                    yield delay(1);
+                }
             }
             else {
                 canvas[middle].style.backgroundColor = "#00ff00";
