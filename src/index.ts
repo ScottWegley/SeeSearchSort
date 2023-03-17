@@ -286,8 +286,12 @@ function drawDefaultData(): void {
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.classList.add("datemDiv");
             toAdd.addEventListener("mouseover", (e) => {
                 handleDatemHover(e);
+            });
+            toAdd.addEventListener("mouseleave", (e) => {
+                handleHoverLeave(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -305,8 +309,12 @@ function drawDefaultData(): void {
             toAdd.style.backgroundColor = "gray";
             toAdd.style.display = "inline-block";
             toAdd.id = "displayDatem" + dataSet[index];
+            toAdd.classList.add("datemDiv");
             toAdd.addEventListener("mouseover", (e) => {
                 handleDatemHover(e);
+            });
+            toAdd.addEventListener("mouseleave", (e) => {
+                handleHoverLeave(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -362,11 +370,28 @@ function handleDatemHover(e: MouseEvent): void {
         if (prevDatem != -1) {
             Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
                 (el as HTMLElement).style.backgroundColor = "gray";
+                (el as HTMLElement).classList.remove("currentlyHoveredDatem");
             });
         };
         (e.target as HTMLElement).classList.add("currentlyHoveredDatem");
         (e.target as HTMLElement).style.backgroundColor = "#00ff00";
         (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: " + (e.target as HTMLElement).id.replace("displayDatem", "");
+    }
+}
+
+/**
+ * Removes any highlights from data if none is hovered.
+ * @param e 
+ */
+function handleHoverLeave(e: MouseEvent): void {
+    if(allowHover){
+        if(document.querySelectorAll("div.datemDiv:hover").length == 0){
+            Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
+                (el as HTMLElement).style.backgroundColor = "gray";
+                (el as HTMLElement).classList.remove("currentlyHoveredDatem");
+            });
+            (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: "
+        }
     }
 }
 
@@ -595,7 +620,7 @@ async function binarySearch(): Promise<void> {
         if (searchKey > localDataSet[middle]) {
             prevStart = start;
             start = middle + 1;
-            for (let i = prevStart; i < start; i++) {
+            for (let i = prevStart; i <= start; i++) {
                 setDatemRangeColor("red", i, i);
                 await delay(1);
             }
