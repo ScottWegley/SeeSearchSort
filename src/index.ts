@@ -55,7 +55,7 @@ let currentlySorted: Boolean = false;
 /** Stores whether or not an algorithm is current running. */
 let ALGO_RUNNING: Boolean = false;
 /** Stores whether or not the data set current has search coloring. */
-let COLORED:Boolean = false;
+let COLORED: Boolean = false;
 
 /**
  * Our "main" function.  Controls the intitial state of the algorithm type radio buttons, max size check box, and search key.
@@ -293,6 +293,9 @@ function drawDefaultData(): void {
             toAdd.addEventListener("mouseleave", (e) => {
                 handleHoverLeave(e);
             });
+            toAdd.addEventListener("click", (e) => {
+                handleDatemClick(e);
+            });
             canvas.appendChild(toAdd);
         }
     }
@@ -315,6 +318,9 @@ function drawDefaultData(): void {
             });
             toAdd.addEventListener("mouseleave", (e) => {
                 handleHoverLeave(e);
+            });
+            toAdd.addEventListener("click", (e) => {
+                handleDatemClick(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -362,7 +368,7 @@ function getMaxDataSize(): Number {
  */
 function handleDatemHover(e: MouseEvent): void {
     if (allowHover) {
-        if(COLORED){
+        if (COLORED) {
             COLORED = false;
             setDatemColor("gray");
         }
@@ -381,17 +387,28 @@ function handleDatemHover(e: MouseEvent): void {
 
 /**
  * Removes any highlights from data if none is hovered.
- * @param e 
+ * @param e The MouseEvent associated with our target.
  */
 function handleHoverLeave(e: MouseEvent): void {
-    if(allowHover){
-        if(document.querySelectorAll("div.datemDiv:hover").length == 0){
+    if (allowHover) {
+        if (document.querySelectorAll("div.datemDiv:hover").length == 0) {
             Array.from(document.getElementsByClassName("currentlyHoveredDatem")).forEach((el) => {
                 (el as HTMLElement).style.backgroundColor = "gray";
                 (el as HTMLElement).classList.remove("currentlyHoveredDatem");
             });
-            (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: "
+            (document.getElementById("hoveredDatem") as HTMLLabelElement).textContent = "Hovered Value: ";
         }
+    }
+}
+
+/**
+ * Store the value of the data you click as the search
+ * key if the system state allows.
+ * @param e The MouseEvent to retrieve our target from.
+ */
+function handleDatemClick(e:MouseEvent): void {
+    if (!ALGO_RUNNING) {
+        (document.getElementById("searchKey") as HTMLInputElement).value = (e.target as HTMLElement).id.replace("displayDatem","");
     }
 }
 
