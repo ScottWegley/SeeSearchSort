@@ -294,6 +294,9 @@ function drawDefaultData() {
             toAdd.addEventListener("mouseleave", (e) => {
                 handleHoverLeave(e);
             });
+            toAdd.addEventListener("click", (e) => {
+                handleDatemClick(e);
+            });
             canvas.appendChild(toAdd);
         }
     }
@@ -316,6 +319,9 @@ function drawDefaultData() {
             });
             toAdd.addEventListener("mouseleave", (e) => {
                 handleHoverLeave(e);
+            });
+            toAdd.addEventListener("click", (e) => {
+                handleDatemClick(e);
             });
             canvas.appendChild(toAdd);
         }
@@ -380,7 +386,7 @@ function handleDatemHover(e) {
 }
 /**
  * Removes any highlights from data if none is hovered.
- * @param e
+ * @param e The MouseEvent associated with our target.
  */
 function handleHoverLeave(e) {
     if (allowHover) {
@@ -391,6 +397,16 @@ function handleHoverLeave(e) {
             });
             document.getElementById("hoveredDatem").textContent = "Hovered Value: ";
         }
+    }
+}
+/**
+ * Store the value of the data you click as the search
+ * key if the system state allows.
+ * @param e The MouseEvent to retrieve our target from.
+ */
+function handleDatemClick(e) {
+    if (!ALGO_RUNNING) {
+        document.getElementById("searchKey").value = e.target.id.replace("displayDatem", "");
     }
 }
 /** Disables the on hover effexts for datem divs via {@link allowHover}. Removes any active effects. */
