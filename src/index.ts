@@ -406,9 +406,9 @@ function handleHoverLeave(e: MouseEvent): void {
  * key if the system state allows.
  * @param e The MouseEvent to retrieve our target from.
  */
-function handleDatemClick(e:MouseEvent): void {
+function handleDatemClick(e: MouseEvent): void {
     if (!ALGO_RUNNING) {
-        (document.getElementById("searchKey") as HTMLInputElement).value = (e.target as HTMLElement).id.replace("displayDatem","");
+        (document.getElementById("searchKey") as HTMLInputElement).value = (e.target as HTMLElement).id.replace("displayDatem", "");
     }
 }
 
@@ -479,6 +479,12 @@ async function runAlgorithm(): Promise<void> {
             }
             break;
         case Algos.FIBONACCI_SEARCH:
+            if (!(dataMode == DataMode.ASCENDING)) {
+                alert("You cannot run this algorithm on unsorted data.");
+            } else {
+                await fibonacciSearch();
+                COLORED = true;
+            }
             break;
         case Algos.INSERTION_SORT:
             if (dataMode == DataMode.ASCENDING) {
@@ -649,6 +655,8 @@ async function binarySearch(): Promise<void> {
                 await delay(1);
             }
         } else {
+            setDatemRangeColor("#00ff00", middle, middle);
+            return;
         }
     }
 }
