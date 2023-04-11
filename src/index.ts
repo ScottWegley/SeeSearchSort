@@ -172,7 +172,7 @@ function injectScripts(): void {
             ev.preventDefault();
             return;
         }
-        setDatemColor("gray");
+        setDataColor("gray");
     });
 }
 
@@ -370,7 +370,7 @@ function handleDatemHover(e: MouseEvent): void {
     if (allowHover) {
         if (COLORED) {
             COLORED = false;
-            setDatemColor("gray");
+            setDataColor("gray");
         }
         let prevDatem: Number = parseInt(((document.getElementById("hoveredDatem") as HTMLLabelElement).textContent?.substring(15) || "-1"));
         if (prevDatem != -1) {
@@ -445,7 +445,7 @@ function colorFromRGB(r: Number, g: Number, b: Number): string {
  * Function to set the entire display to a color useing a string Color.
  * @param color A color formatted as #XX00XX or a named color.
  */
-function setDatemColor(color: string) {
+function setDataColor(color: string) {
     setDatemRangeColor(color);
 }
 
