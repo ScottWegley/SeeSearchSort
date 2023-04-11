@@ -649,8 +649,56 @@ async function binarySearch(): Promise<void> {
                 await delay(1);
             }
         } else {
-            (canvas[middle] as HTMLElement).style.backgroundColor = "#00ff00";
-            return;
+        }
+    }
+}
+
+/** Function to execute fibonacci search. */
+async function fibonacciSearch(): Promise<void> {
+    let canvas = Array.from((document.getElementById("dataDisplay") as HTMLDivElement).children);
+    let localDataSet: Array<Number> = Array.from(dataSet);
+    let searchKey = (document.getElementById("searchKey") as HTMLInputElement).valueAsNumber;
+    let N = localDataSet.length;
+    if (N == 1 && localDataSet[N - 1] == searchKey) {
+        setDatemRangeColor("#00ff00", N - 1, N - 1);
+        return;
+    }
+
+    let m2 = 0;
+    let m1 = 1;
+    let m = 1;
+    while (m < N) {
+        m2 = m1;
+        m1 = m;
+        m = m2 + m1;
+    }
+
+    let start = -1;
+
+    while (m > 1) {
+        let index = (start + m2 < N - 1) ? start + m2 : N - 1;
+        if (searchKey > localDataSet[index]) {
+            m = m1;
+            m1 = m2;
+            m2 = m-m1;
+            for (let i = 0; i <= index; i++) {
+                setDatemRangeColor("red",i,i);
+                await delay(1);
+            }
+            start = index;
+        } else {
+            if (searchKey < localDataSet[index]) {
+                m = m2;
+                m1 = m1-m2;
+                m2 = m-m1;
+                for (let i = index; i < N; i++) {
+                    setDatemRangeColor("red",i,i);
+                    await delay(1);                    
+                }
+            } else {
+                setDatemRangeColor("#00ff00", index,index);
+                return;
+            }
         }
     }
 }
