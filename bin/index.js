@@ -179,7 +179,7 @@ function injectScripts() {
             ev.preventDefault();
             return;
         }
-        setDatemColor("gray");
+        setDataColor("gray");
     });
 }
 /**
@@ -369,7 +369,7 @@ function handleDatemHover(e) {
     if (allowHover) {
         if (COLORED) {
             COLORED = false;
-            setDatemColor("gray");
+            setDataColor("gray");
         }
         let prevDatem = parseInt((((_a = document.getElementById("hoveredDatem").textContent) === null || _a === void 0 ? void 0 : _a.substring(15)) || "-1"));
         if (prevDatem != -1) {
@@ -440,7 +440,7 @@ function colorFromRGB(r, g, b) {
  * Function to set the entire display to a color useing a string Color.
  * @param color A color formatted as #XX00XX or a named color.
  */
-function setDatemColor(color) {
+function setDataColor(color) {
     setDatemRangeColor(color);
 }
 /**
@@ -474,6 +474,13 @@ function runAlgorithm() {
                 }
                 break;
             case Algos.FIBONACCI_SEARCH:
+                if (!(dataMode == DataMode.ASCENDING)) {
+                    alert("You cannot run this algorithm on unsorted data.");
+                }
+                else {
+                    yield fibonacciSearch();
+                    COLORED = true;
+                }
                 break;
             case Algos.INSERTION_SORT:
                 if (dataMode == DataMode.ASCENDING) {
@@ -656,8 +663,58 @@ function binarySearch() {
                 }
             }
             else {
-                canvas[middle].style.backgroundColor = "#00ff00";
+                setDatemRangeColor("#00ff00", middle, middle);
                 return;
+            }
+        }
+    });
+}
+/** Function to execute fibonacci search. */
+function fibonacciSearch() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let canvas = Array.from(document.getElementById("dataDisplay").children);
+        let localDataSet = Array.from(dataSet);
+        let searchKey = document.getElementById("searchKey").valueAsNumber;
+        let N = localDataSet.length;
+        if (N == 1 && localDataSet[N - 1] == searchKey) {
+            setDatemRangeColor("#00ff00", N - 1, N - 1);
+            return;
+        }
+        let m2 = 0;
+        let m1 = 1;
+        let m = 1;
+        while (m < N) {
+            m2 = m1;
+            m1 = m;
+            m = m2 + m1;
+        }
+        let start = -1;
+        while (m > 1) {
+            let index = (start + m2 < N - 1) ? start + m2 : N - 1;
+            if (searchKey > localDataSet[index]) {
+                m = m1;
+                m1 = m2;
+                m2 = m - m1;
+                for (let i = 0; i <= index; i++) {
+                    setDatemRangeColor("red", i, i);
+                    yield delay(1);
+                }
+                start = index;
+            }
+            else {
+                if (searchKey < localDataSet[index]) {
+                    m = m2;
+                    m1 = m1 - m2;
+                    m2 = m - m1;
+                    for (let i = index; i < N; i++) {
+                        setDatemRangeColor("red", i, i);
+                        yield delay(1);
+                    }
+                }
+                else {
+                    setDatemRangeColor("#00ff00", index, index);
+                    return;
+                }
             }
         }
     });
