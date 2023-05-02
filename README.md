@@ -1,0 +1,2 @@
+# SeeSearchSort
+This is a project I worked on during Spring '23, my second semester at Cal Lutheran.  I created it because I would get bored in my algorithms class and instead of spacing out or doing nothing, I felt a project to demonstrate my understanding of the basic algorithms we studied was a better use of my time.  This web app contains very basic animations of entry level searching and sorting algorithms as well as an interface to manipulate the data set they will run on.
